@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ArchiveProject.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ArchiveProject.Logic;
 
 namespace ArchiveProject
 {
@@ -36,11 +37,13 @@ namespace ArchiveProject
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("localDb")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +72,17 @@ namespace ArchiveProject
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            TableDeployer tb = new TableDeployer();
+            tb.deployRequiredTables();
+
+            //List<KeyValuePair<string, string>> test = new List<KeyValuePair<string, string>>();
+            //test.Add(new KeyValuePair<string, string>("TESTINT", "Integer"));
+            //test.Add(new KeyValuePair<string, string>("TESTSTRING", "String"));
+            //test.Add(new KeyValuePair<string, string>("TESTBOOL", "Boolean"));
+            //test.Add(new KeyValuePair<string, string>("TESTDATE", "Date"));
+
+            //tb.CreateTable(test, "testtabellen2018");
         }
     }
 }

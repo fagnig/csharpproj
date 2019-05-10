@@ -55,7 +55,7 @@ namespace ArchiveProject.Controllers
 
             ModelPopulator mdl = new ModelPopulator();
 
-            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id);
+            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "" : id);
 
             return View(tmp2);
         }
