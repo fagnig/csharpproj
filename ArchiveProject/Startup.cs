@@ -70,16 +70,8 @@ namespace ArchiveProject
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Archive}/{action=Index}/{id?}");
             });
-
-            //List<KeyValuePair<string, string>> test = new List<KeyValuePair<string, string>>();
-            //test.Add(new KeyValuePair<string, string>("TESTINT", "Integer"));
-            //test.Add(new KeyValuePair<string, string>("TESTSTRING", "String"));
-            //test.Add(new KeyValuePair<string, string>("TESTBOOL", "Boolean"));
-            //test.Add(new KeyValuePair<string, string>("TESTDATE", "Date"));
-
-            //tb.CreateTable(test, "testtabellen2018");
         }
     }
 }
