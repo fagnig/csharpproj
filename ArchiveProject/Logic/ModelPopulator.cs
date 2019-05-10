@@ -16,8 +16,7 @@ namespace ArchiveProject.Logic
 
             string conString, sql;
             SqlConnection sqlCon;
-
-            conString = @"Data Source=localhost;Initial Catalog=master; User ID=sa; Password=Meme4321";
+            conString = @"Server=.\SQLEXPRESS;Initial Catalog=ArchiveProject;Trusted_Connection=True";
             sql = $"SELECT * from {tableToGet}";
 
             sqlCon = new SqlConnection(conString);
