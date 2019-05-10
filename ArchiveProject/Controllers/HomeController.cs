@@ -55,9 +55,21 @@ namespace ArchiveProject.Controllers
 
             ModelPopulator mdl = new ModelPopulator();
 
-            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "" : id);
-
+            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id);
+            tmp2.tableHash = string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id;
+            tmp2.tableTitle = string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id;
             return View(tmp2);
+        }
+
+        public void UpdateDbValue(string id, string column, string table, string value)
+        {
+            string conString = @"Server=.\SQLEXPRESS;Initial Catalog=ArchiveProject;Trusted_Connection=True";
+            string sql = $"UPDATE [{table}] SET [{column}] = '{value}' WHERE id = '{id}'";
+            SqlConnection sqlCon = new SqlConnection(conString);
+            sqlCon.Open();
+            SqlCommand sqlCommand = new SqlCommand(sql, sqlCon);
+            sqlCommand.ExecuteNonQuery();
+            sqlCon.Close();
         }
     }
 }

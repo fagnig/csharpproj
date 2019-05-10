@@ -1,32 +1,50 @@
 ﻿@model ArchiveViewModel;
 
-@{
-    ViewData["Title"] = "Database";
+<h2>@Model.tableTitle</h2>
+<div style="width:100%;overflow:auto;">
+    <table class="table">
+        <thead>
+            <tr>
+                @for (int i = 1; i < Model.typelist.Count; i++)
+                {
+                    <th>@Model.typelist[i].Key <br /> @Model.typelist[i].Value.Name</th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
 
-}
+            @foreach (List<Object> rows in Model.values)
+            {
+                <tr>
+                    @for (int i = 1; i < rows.Count; i++)
+                    {
+                        <td>
+                            @if(Model.typelist[i].Value.Name.Equals("String"))
+                            {
+                                <input type="text" value="@rows[i]" name="@rows[0].ToString()" data-id="@rows[0].ToString()" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                            }
+                            else if(Model.typelist[i].Value.Name.Equals("Boolean"))
+                            {
+                                <input type="checkbox" checked="@rows[i]" name="@rows[0].ToString()" data-id="@rows[0].ToString()" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                            }
+                            else if(Model.typelist[i].Value.Name.Equals("Int32"))
+                            {
+                                <input type="number" value="@rows[i]" name="@rows[0].ToString()" data-id="@rows[0].ToString()" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                            }
+                            else if(Model.typelist[i].Value.Name.Equals("Date"))
+                            {
+                                <input type="date" value="@rows[i]" name="@rows[0].ToString()" data-id="@rows[0].ToString()" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                            }
+                        </td>
+                    }
 
-<h2>@ViewData["Title"]</h2>
-
-<table class="table">
-<thead><tr>
-    @foreach (KeyValuePair<string, Type> tmp in Model.typelist)
-    {
-        <th>@tmp.Key <br/> @tmp.Value.Name</th>
-    }
-    <th></th>
-    </tr>
-</thead><tbody>
-
-    @foreach (List<object> tmp in Model.values)
-    {
-        <tr>
-        @foreach (object tmpObj in tmp)
-        {
-            <td> <input type="text" class="form-control" value="@tmpObj.ToString()" /> </td>
-        }
-
-        <td><input type="button" class="btn btn-default" value="Edit"/>  <input type="button" class="btn btn-default" value="Delete" /> </td>
-        </tr>
-    }
-</tbody>
-</table>
+                    <td>
+                        <input id="edit" type="button" class="btn btn-default" value="Edit" data-id="@rows[0].ToString()" />  
+                        <input id="delete" type="button" class="btn btn-default" value="Delete" data-id="@rows[0].ToString()" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
