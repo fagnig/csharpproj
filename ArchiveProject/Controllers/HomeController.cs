@@ -14,8 +14,17 @@ namespace ArchiveProject.Controllers
     public class HomeController : Controller
     {
 
+        private readonly ApplicationDbContext dbContext;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            dbContext = context;
+        }
+
         public IActionResult Index()
         {
+
+            dbContext.DBTEST();
             return View();
         }
 
@@ -54,6 +63,8 @@ namespace ArchiveProject.Controllers
         {
 
             ModelPopulator mdl = new ModelPopulator();
+
+            
 
             ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id);
             tmp2.tableHash = string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id;

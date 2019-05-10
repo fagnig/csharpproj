@@ -74,7 +74,7 @@ namespace ArchiveProject
             });
 
             TableDeployer tb = new TableDeployer();
-            tb.deployRequiredTables();
+            //tb.deployRequiredTables();
 
             //List<KeyValuePair<string, string>> test = new List<KeyValuePair<string, string>>();
             //test.Add(new KeyValuePair<string, string>("TESTINT", "Integer"));
