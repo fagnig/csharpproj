@@ -1,6 +1,32 @@
-﻿@{
+﻿@model ArchiveViewModel;
+
+@{
     ViewData["Title"] = "Database";
+
 }
 
 <h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+
+<table class="table">
+<thead><tr>
+    @foreach (KeyValuePair<string, Type> tmp in Model.typelist)
+    {
+        <th>@tmp.Key <br/> @tmp.Value.Name</th>
+    }
+    <th></th>
+    </tr>
+</thead><tbody>
+
+    @foreach (List<object> tmp in Model.values)
+    {
+        <tr>
+        @foreach (object tmpObj in tmp)
+        {
+            <td> <input type="text" class="form-control" value="@tmpObj.ToString()" /> </td>
+        }
+
+        <td><input type="button" class="btn btn-default" value="Edit"/>  <input type="button" class="btn btn-default" value="Delete" /> </td>
+        </tr>
+    }
+</tbody>
+</table>

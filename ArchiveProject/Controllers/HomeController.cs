@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ArchiveProject.Models;
 using System.Data.SqlClient;
+using ArchiveProject.Data;
+using ArchiveProject.Logic;
 
 namespace ArchiveProject.Controllers
 {
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
             return View();
@@ -47,38 +50,14 @@ namespace ArchiveProject.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Database()
+        public IActionResult Database(string id)
         {
-            string conString, sql;
-            SqlConnection sqlCon;
 
-            conString = @"Data Source=localhost;Initial Catalog=master; User ID=sa; Password=Meme4321";
-            sql = "SELECT * from dbo.MSreplication_options";
+            ModelPopulator mdl = new ModelPopulator();
 
-            sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
+            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id);
 
-            SqlCommand sqlCommand;
-            SqlDataReader sqlDataReader;
-            String Output = "";
-
-
-            sqlCommand = new SqlCommand(sql, sqlCon);
-
-            sqlDataReader = sqlCommand.ExecuteReader();
-
-            while (sqlDataReader.Read())
-            {
-                for (int i = 0; i < sqlDataReader.FieldCount; i++)
-                {
-                    Output += sqlDataReader.GetValue(i) + " - ";
-                }
-                Output += Environment.NewLine;
-            }
-
-            ViewData["Message"] = Output;
-
-            return View();
+            return View(tmp2);
         }
     }
 }
