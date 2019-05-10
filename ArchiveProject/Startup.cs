@@ -73,9 +73,6 @@ namespace ArchiveProject
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            TableDeployer tb = new TableDeployer();
-            //tb.deployRequiredTables();
-
             //List<KeyValuePair<string, string>> test = new List<KeyValuePair<string, string>>();
             //test.Add(new KeyValuePair<string, string>("TESTINT", "Integer"));
             //test.Add(new KeyValuePair<string, string>("TESTSTRING", "String"));

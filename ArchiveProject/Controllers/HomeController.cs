@@ -23,8 +23,8 @@ namespace ArchiveProject.Controllers
 
         public IActionResult Index()
         {
-
-            dbContext.DBTEST();
+            TableDeployer tb = new TableDeployer(dbContext);
+            tb.deployRequiredTables();
             return View();
         }
 
@@ -62,25 +62,20 @@ namespace ArchiveProject.Controllers
         public IActionResult Database(string id)
         {
 
-            ModelPopulator mdl = new ModelPopulator();
+            ModelPopulator mdl = new ModelPopulator(dbContext);
 
-            
-
-            ArchiveViewModel tmp2 = mdl.GetTable(string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id);
-            tmp2.tableHash = string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id;
-            tmp2.tableTitle = string.IsNullOrEmpty(id) ? "dbo.MSreplication_options" : id;
-            return View(tmp2);
+           
+            ArchiveViewModel tmp = mdl.GetTable(string.IsNullOrEmpty(id) ? "ArchiveMapping" : id);
+            tmp.tableHash = string.IsNullOrEmpty(id) ? "ArchiveMapping" : id;
+            tmp.tableTitle = string.IsNullOrEmpty(id) ? "ArchiveMapping" : id;
+            return View(tmp);
         }
 
         public void UpdateDbValue(string id, string column, string table, string value)
         {
-            string conString = @"Server=.\SQLEXPRESS;Initial Catalog=ArchiveProject;Trusted_Connection=True";
-            string sql = $"UPDATE [{table}] SET [{column}] = '{value}' WHERE id = '{id}'";
-            SqlConnection sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
-            SqlCommand sqlCommand = new SqlCommand(sql, sqlCon);
-            sqlCommand.ExecuteNonQuery();
-            sqlCon.Close();
+            ModelUpdater mu = new ModelUpdater(dbContext);
+
+            mu.updateFields(id, column, table, value);
         }
     }
 }

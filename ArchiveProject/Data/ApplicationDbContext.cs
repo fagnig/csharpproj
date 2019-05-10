@@ -10,6 +10,8 @@ namespace ArchiveProject.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public DbConnection sqlCon;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -17,17 +19,8 @@ namespace ArchiveProject.Data
             //SqlCommand sqlCommand = new SqlCommand(sql, sqlCon);
             //sqlCommand.ExecuteNonQuery();
             // sqlCon.Close();
-            this.Database.GetDbConnection().Open();
+            sqlCon = this.Database.GetDbConnection();
         }
 
-        public void DBTEST()
-        {
-            string sql = $"UPDATE [AspNetUsers] SET [UserName] = 'asd'";
-
-            DbCommand dc = this.Database.GetDbConnection().CreateCommand();
-            dc.CommandText = sql;
-
-            dc.ExecuteNonQuery();
-        }
     }
 }

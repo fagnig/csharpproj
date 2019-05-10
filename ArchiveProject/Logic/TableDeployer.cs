@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using ArchiveProject.Data;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Protocols;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +14,12 @@ namespace ArchiveProject.Logic
     {
         Dictionary<string, string> typeMap;
 
-        public TableDeployer()
+        private readonly ApplicationDbContext dbContext;
+
+        public TableDeployer(ApplicationDbContext context)
         {
+            dbContext = context;
+
             typeMap = new Dictionary<string, string>();
 
             typeMap["String"] = "nvarchar(256)";
@@ -24,17 +30,11 @@ namespace ArchiveProject.Logic
         }
 
         public int CreateTable(List<KeyValuePair<string,string>> schema, string name)
-        {
-            string conString, sql="";
-            SqlConnection sqlCon;
-
+        {  
             uint tmp = (uint) name.GetHashCode();
             string hashedname = tmp.ToString();
 
-
-            conString = @"Server =.\; Database = ArchiveProject; Trusted_Connection = True; MultipleActiveResultSets = True";
-
-            sql = "CREATE TABLE tb_" + hashedname + "(";
+            string sql = "CREATE TABLE tb_" + hashedname + "(";
 
             for(int i = 0; i< schema.Count(); i++)
             {
@@ -47,14 +47,13 @@ namespace ArchiveProject.Logic
 
             sql += ");";
 
-            sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
+            dbContext.sqlCon.Open();
 
-            SqlCommand sqlCommand;
-            sqlCommand = new SqlCommand(sql, sqlCon);
-            sqlCommand.ExecuteNonQuery();
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = sql;
+            dc.ExecuteNonQuery();
 
-            sqlCon.Close();
+            dbContext.sqlCon.Close();
 
             MapTable(hashedname,name);
 
@@ -63,21 +62,13 @@ namespace ArchiveProject.Logic
 
         public int MapTable(string hash, string name)
         {
-            string conString, sql;
-            SqlConnection sqlCon;
+            dbContext.sqlCon.Open();
 
-            conString = @"Server =.\; Database = ArchiveProject; Trusted_Connection = True; MultipleActiveResultSets = True";
-            sql = $"INSERT INTO ArchiveMapping VALUES ( '{hash}', '{name}');";
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"INSERT INTO ArchiveMapping VALUES ( '{hash}', '{name}');";
+            dc.ExecuteNonQuery();
 
-            sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
-
-            SqlCommand sqlCommand;
-            sqlCommand = new SqlCommand(sql, sqlCon);
-            sqlCommand.ExecuteNonQuery();
-
-            sqlCon.Close();
-
+            dbContext.sqlCon.Close();
 
             return 0;
         }
@@ -85,26 +76,24 @@ namespace ArchiveProject.Logic
         public int deployRequiredTables()
         {
 
-            string conString, sql;
-            SqlConnection sqlCon;
-         
-            conString = @"Server =.\; Database = ArchiveProject; Trusted_Connection = True; MultipleActiveResultSets = True";
-            sql = "CREATE TABLE ArchiveMapping( hash nvarchar(256), name nvarchar(256));";
-
-            sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
- 
+            dbContext.sqlCon.Open();
             try
             {
-                SqlCommand sqlCommand;
-                sqlCommand = new SqlCommand(sql, sqlCon);
-                sqlCommand.ExecuteNonQuery();
-            } catch (SqlException)
-            {
-                //Tables exist
-            }
+                DbCommand dc = dbContext.sqlCon.CreateCommand();
+                dc.CommandText = "CREATE TABLE ArchiveMapping( id nvarchar(256), name nvarchar(256));";
+                dc.ExecuteNonQuery();
 
-            sqlCon.Close();
+                dc.CommandText = "CREATE TABLE ArchiveRoles( id int NOT NULL AUTO_INCREMENT, name nvarchar(256));";
+                dc.ExecuteNonQuery();
+
+                dc.CommandText = "CREATE TABLE ArchiveRoleMapping( id_role int, id_table nvarchar(256));";
+                dc.ExecuteNonQuery();
+
+                dc.CommandText = "CREATE TABLE ArchiveUserRoleMapping( id_user nvarchar(450), id_role int);";
+                dc.ExecuteNonQuery();
+            } catch (SqlException){/*Tables exist*/}
+
+            dbContext.sqlCon.Close();
 
 
             return 0;

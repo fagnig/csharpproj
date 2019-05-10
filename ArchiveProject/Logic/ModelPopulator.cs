@@ -1,6 +1,8 @@
-﻿using ArchiveProject.Models;
+﻿using ArchiveProject.Data;
+using ArchiveProject.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
@@ -10,43 +12,38 @@ namespace ArchiveProject.Logic
 {
     public class ModelPopulator
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public ModelPopulator(ApplicationDbContext context)
+        {
+            dbContext = context;
+
+        }
+
         public ArchiveViewModel GetTable(string tableToGet)
         {
             ArchiveViewModel table = new ArchiveViewModel();
 
-            string conString, sql;
-            SqlConnection sqlCon;
+            dbContext.sqlCon.Open();
 
-            conString = @"Server=.\;Database=ArchiveProject;Trusted_Connection=True;MultipleActiveResultSets=True";
-            sql = $"SELECT * from {tableToGet}";
-
-            sqlCon = new SqlConnection(conString);
-            sqlCon.Open();
-
-            SqlCommand sqlCommand;
-            SqlDataReader sqlDataReader;
-
-            sqlCommand = new SqlCommand(sql, sqlCon);
-
-            sqlDataReader = sqlCommand.ExecuteReader();
-
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"SELECT * from {tableToGet}";
+            DbDataReader dr = dc.ExecuteReader();
             bool first = true;
 
-            while (sqlDataReader.Read())
+            while (dr.Read())
             {
                 List<Object> tmpList = new List<object>();
 
-                for (int i = 0; i < sqlDataReader.FieldCount; i++)
+                for (int i = 0; i < dr.FieldCount; i++)
                 {
                     if (first)
                     {
-                        table.typelist.Add(new KeyValuePair<string, Type>(sqlDataReader.GetName(i), sqlDataReader.GetFieldType(i)));
+                        table.typelist.Add(new KeyValuePair<string, Type>(dr.GetName(i), dr.GetFieldType(i)));
                        
                     }
 
-       
-
-                    tmpList.Add(sqlDataReader.GetValue(i));
+                    tmpList.Add(dr.GetValue(i));
                 }
 
                 first = false;
@@ -54,8 +51,7 @@ namespace ArchiveProject.Logic
                 table.values.Add(tmpList);
             }
 
-
-            sqlCon.Close();
+            dbContext.sqlCon.Close();
 
             return table;
         }
