@@ -22,6 +22,7 @@ namespace ArchiveProject.Logic
 
             typeMap = new Dictionary<string, string>();
 
+            
             typeMap["String"] = "nvarchar(256)";
             typeMap["Boolean"] = "bit";
             typeMap["Integer"] = "int";
@@ -31,10 +32,15 @@ namespace ArchiveProject.Logic
 
         public int CreateTable(List<KeyValuePair<string,string>> schema, string name)
         {  
+            if(schema.Count() == 0)
+            {
+                return -1;
+            }
+
             uint tmp = (uint) name.GetHashCode();
             string hashedname = tmp.ToString();
 
-            string sql = "CREATE TABLE tb_" + hashedname + "(";
+            string sql = "CREATE TABLE tb_" + hashedname + "( id int NOT NULL IDENTITY(1,1), ";
 
             for(int i = 0; i< schema.Count(); i++)
             {
@@ -78,6 +84,8 @@ namespace ArchiveProject.Logic
 
             dbContext.sqlCon.Open();
             DbCommand dc = dbContext.sqlCon.CreateCommand();
+            
+
             try {
                 dc.CommandText = "CREATE TABLE ArchiveMapping( id nvarchar(256), name nvarchar(256));";
                 dc.ExecuteNonQuery();
@@ -85,10 +93,22 @@ namespace ArchiveProject.Logic
             catch (SqlException) {/*Table exists*/}
 
             try {
-                dc.CommandText = "CREATE TABLE ArchivePermissions( id int NOT NULL IDENTITY(1,1), name nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermissions( id int NOT NULL IDENTITY(0,1), name nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}
+
+            try
+            {
+                dc.CommandText = "SELECT COUNT(*) FROM ArchivePermissions WHERE id = 0";
+
+                if ((Int32)dc.ExecuteScalar() == 0)
+                {
+                    dc.CommandText = "INSERT INTO ArchivePermissions VALUES ('Admin');";
+                    dc.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException) {/*Admin role exists*/}
 
             try { 
                 dc.CommandText = "CREATE TABLE ArchivePermMapping( id_role int, id_table nvarchar(256));";
@@ -107,6 +127,13 @@ namespace ArchiveProject.Logic
 
 
             return 0;
+        }
+
+        public void deployDefaultData(string currentUserHash)
+        {
+            List<KeyValuePair<string, string>> tmpTable = new List<KeyValuePair<string, string>>();
+            
+
         }
     }
 }

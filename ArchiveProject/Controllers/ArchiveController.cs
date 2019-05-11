@@ -27,7 +27,6 @@ namespace ArchiveProject.Controllers
             td.deployRequiredTables();
             UserValidator uv = new UserValidator(dbContext);
             var key = this.User.FindFirst(ClaimTypes.NameIdentifier);
-            System.Diagnostics.Debug.WriteLine("KIG DOG: " + key.Value);
             return View(uv.getUserTableList(key.Value));
         }
 

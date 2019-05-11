@@ -62,8 +62,18 @@ namespace ArchiveProject.Logic
             return tmpList;
         }
 
+        public bool isUserAdmin(string userHash)
+        {
+            List<int> userRoles = getUserRoles(userHash);
+
+            return userRoles.Contains(0);
+        }
         public bool canUserAccess(string userHash, string tableHash)
         {
+            if (isUserAdmin(userHash)){
+                return true;
+            }
+
             List<int> userRoles = getUserRoles(userHash);
             List<int> tableRoles = getTableRoles(tableHash);
             
@@ -81,6 +91,11 @@ namespace ArchiveProject.Logic
 
             List<int> userRoles = getUserRoles(userHash);
 
+            if (userRoles.Count() == 0)
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
+
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
@@ -96,6 +111,11 @@ namespace ArchiveProject.Logic
             }
 
             sqlBuild += ");";
+
+            if (isUserAdmin(userHash))
+            {
+                sqlBuild = "SELECT * FROM ArchivePermMapping";
+            }
 
             dc.CommandText = sqlBuild;
 

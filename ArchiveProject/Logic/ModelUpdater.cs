@@ -20,6 +20,16 @@ namespace ArchiveProject.Logic
 
         }
 
+        public void insertRow(string tableHash)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"INSERT INTO [tb_{tableHash}];";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
 
         public void updateFields(string id, string column, string table, string value)
         {
@@ -32,6 +42,28 @@ namespace ArchiveProject.Logic
 
             dbContext.sqlCon.Close();
 
+        }
+
+        public void dropRow(string tableHash, string id)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"DELETE FROM [tb_{tableHash}] WHERE id = '{id}'";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
+
+        public void dropTable(string tableHash)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"DROP TABLE [tb_{tableHash}]";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
         }
     }
 }
