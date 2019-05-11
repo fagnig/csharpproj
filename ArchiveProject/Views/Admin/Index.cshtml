@@ -1,4 +1,6 @@
-﻿<table style="width:100%;margin-top:1em;">
+﻿@model AdminViewModel
+
+<table style="width:100%;margin-top:1em;">
     <tr>
         <th style="width:100%"><h2>Admin page</h2></th>
         <th style="vertical-align:bottom;"><a class="btn btn-default" asp-action="Index" asp-controller="Archive">Forside</a></th>
@@ -16,7 +18,38 @@
         </div>
         <div id="collapse1" class="panel-collapse collapse in">
             <div class="panel-body">
-                permission table
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(List<Object> row in Model.permissions)
+                        {
+                        <tr>
+                            <td><input class="input-sm" type="text" value="@row[0]" disabled /></td>
+                            <td><input class="input-sm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
+                            <td><input type="button" class="btn btn-default edit" data-id="@row[0]" value="Edit" /></td>
+                            <td><input type="button" class="btn btn-default assign" data-id="@row[0]" value="Assign" /></td>
+                            <td><input type="button" class="btn btn-default delete" data-id="@row[0]" value="Delete" /></td>
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
@@ -30,7 +63,37 @@
         </div>
         <div id="collapse2" class="panel-collapse collapse">
             <div class="panel-body">
-                user table
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (List<Object> row in Model.users)
+                        {
+                            <tr>
+                                <td><input class="input-sm" type="text" value="@row[0]" disabled /></td>
+                                <td><input class="input-sm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
+                                <td><input type="button" class="btn btn-default edit" data-id="@row[0]" value="Edit" /></td>
+                                <td><input type="button" class="btn btn-default assign" data-id="@row[0]" value="Assign" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
@@ -44,7 +107,38 @@
         </div>
         <div id="collapse3" class="panel-collapse collapse">
             <div class="panel-body">
-                archive table
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (List<Object> row in Model.table)
+                        {
+                            <tr>
+                                <td><input class="input-sm" type="text" value="@row[0]" disabled /></td>
+                                <td><input class="input-sm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
+                                <td><input type="button" class="btn btn-default edit" data-id="@row[0]" value="Edit" /></td>
+                                <td><input type="button" class="btn btn-default assign" data-id="@row[0]" value="Columns" /></td>
+                                <td><input type="button" class="btn btn-default delete" data-id="@row[0]" value="Delete" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
