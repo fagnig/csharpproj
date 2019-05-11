@@ -27,7 +27,7 @@ namespace ArchiveProject.Logic
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"UPDATE [{table}] SET [{column}] = '{value}' WHERE id = '{id}'";
+            dc.CommandText = $"UPDATE [tb_{table}] SET [{column}] = '{value}' WHERE id = '{id}'";
             dc.ExecuteNonQuery();
 
             dbContext.sqlCon.Close();

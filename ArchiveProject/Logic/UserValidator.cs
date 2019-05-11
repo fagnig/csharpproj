@@ -25,7 +25,7 @@ namespace ArchiveProject.Logic
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"SELECT * FROM ArchiveRoleMapping WHERE id_table = '{tableHash}'";
+            dc.CommandText = $"SELECT * FROM ArchivePermMapping WHERE id_table = '{tableHash}'";
 
             DbDataReader dr = dc.ExecuteReader();
 
@@ -46,7 +46,7 @@ namespace ArchiveProject.Logic
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"SELECT * FROM ArchiveUserRoleMapping WHERE id_user = '{userHash}'";
+            dc.CommandText = $"SELECT * FROM ArchiveUserPermMapping WHERE id_user = '{userHash}'";
       
             DbDataReader dr = dc.ExecuteReader();
 
@@ -77,7 +77,7 @@ namespace ArchiveProject.Logic
 
         public List<KeyValuePair<string,string>> getUserTableList(string userHash)
         {
-            string sqlBuild = $"SELECT * FROM ArchiveRoleMapping WHERE id_role IN (";
+            string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_role IN (";
 
             List<int> userRoles = getUserRoles(userHash);
 
@@ -107,7 +107,7 @@ namespace ArchiveProject.Logic
             {
                 tmpHashes.Add(dr.GetString(1));
             }
-
+            dr.Close();
 
             ////////////////////////////////
             ///
@@ -135,6 +135,8 @@ namespace ArchiveProject.Logic
                 tmpList.Add(new KeyValuePair<string, string>(dr.GetString(0),dr.GetString(1)));
             }
 
+            dr.Close();
+            dbContext.sqlCon.Close();
             return tmpList;
         }
         

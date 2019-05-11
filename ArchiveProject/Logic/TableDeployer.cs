@@ -85,19 +85,19 @@ namespace ArchiveProject.Logic
             catch (SqlException) {/*Table exists*/}
 
             try {
-                dc.CommandText = "CREATE TABLE ArchiveRoles( id int NOT NULL AUTO_INCREMENT, name nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermissions( id int NOT NULL IDENTITY(1,1), name nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}
 
             try { 
-                dc.CommandText = "CREATE TABLE ArchiveRoleMapping( id_role int, id_table nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermMapping( id_role int, id_table nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}
 
             try {
-                dc.CommandText = "CREATE TABLE ArchiveUserRoleMapping( id_user nvarchar(450), id_role int);";
+                dc.CommandText = "CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_role int);";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}

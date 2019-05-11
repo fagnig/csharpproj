@@ -5,7 +5,7 @@
 
 $(document).ready(function () {
 
-    $('#edit').bind('click',
+    $('.edit').bind('click',
         function (e) {
             e.preventDefault();
 
