@@ -96,10 +96,6 @@ namespace ArchiveProject.Logic
                 return new List<KeyValuePair<string, string>>();
             }
 
-            dbContext.sqlCon.Open();
-
-            DbCommand dc = dbContext.sqlCon.CreateCommand();
-
             for (int i = 0; i < userRoles.Count(); i++)
             {
             
@@ -117,6 +113,8 @@ namespace ArchiveProject.Logic
                 sqlBuild = "SELECT * FROM ArchivePermMapping";
             }
 
+            dbContext.sqlCon.Open();
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
             dc.CommandText = sqlBuild;
 
             DbDataReader dr = dc.ExecuteReader();

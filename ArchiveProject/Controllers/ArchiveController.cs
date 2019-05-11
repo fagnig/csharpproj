@@ -23,11 +23,19 @@ namespace ArchiveProject.Controllers
 
         public IActionResult Index()
         {
+            // Check required tables
             TableDeployer td = new TableDeployer(dbContext);
             td.deployRequiredTables();
+
+            // Get user identifier
+            var key = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // Check user
             UserValidator uv = new UserValidator(dbContext);
-            var key = this.User.FindFirst(ClaimTypes.NameIdentifier);
-            return View(uv.getUserTableList(key.Value));
+            ViewData["isAdmin"] = uv.isUserAdmin(key);
+
+            // Get available archives
+            return View(uv.getUserTableList(key));
         }
 
         public IActionResult Data(string id)
