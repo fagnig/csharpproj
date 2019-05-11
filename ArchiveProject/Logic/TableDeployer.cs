@@ -111,13 +111,13 @@ namespace ArchiveProject.Logic
             catch (SqlException) {/*Admin role exists*/}
 
             try { 
-                dc.CommandText = "CREATE TABLE ArchivePermMapping( id_role int, id_table nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermMapping( id_perm int, id_table nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}
 
             try {
-                dc.CommandText = "CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_role int);";
+                dc.CommandText = "CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_perm int);";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}

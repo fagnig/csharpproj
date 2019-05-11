@@ -47,7 +47,7 @@ namespace ArchiveProject.Logic
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
             dc.CommandText = $"SELECT * FROM ArchiveUserPermMapping WHERE id_user = '{userHash}'";
-      
+
             DbDataReader dr = dc.ExecuteReader();
 
             List<int> tmpList = new List<int>();
@@ -70,14 +70,14 @@ namespace ArchiveProject.Logic
         }
         public bool canUserAccess(string userHash, string tableHash)
         {
-            if (isUserAdmin(userHash)){
+            if (isUserAdmin(userHash)) {
                 return true;
             }
 
             List<int> userRoles = getUserRoles(userHash);
             List<int> tableRoles = getTableRoles(tableHash);
-            
-            foreach(int role in userRoles)
+
+            foreach (int role in userRoles)
             {
                 if (tableRoles.Contains(role)) { return true; }
             }
@@ -85,7 +85,7 @@ namespace ArchiveProject.Logic
             return false;
         }
 
-        public List<KeyValuePair<string,string>> getUserTableList(string userHash)
+        public List<KeyValuePair<string, string>> getUserTableList(string userHash)
         {
             string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_role IN (";
 
@@ -102,7 +102,7 @@ namespace ArchiveProject.Logic
 
             for (int i = 0; i < userRoles.Count(); i++)
             {
-            
+
                 sqlBuild += $"'{userRoles[i]}'";
                 if (i != userRoles.Count() - 1)
                 {
@@ -152,13 +152,39 @@ namespace ArchiveProject.Logic
 
             while (dr.Read())
             {
-                tmpList.Add(new KeyValuePair<string, string>(dr.GetString(0),dr.GetString(1)));
+                tmpList.Add(new KeyValuePair<string, string>(dr.GetString(0), dr.GetString(1)));
             }
 
             dr.Close();
             dbContext.sqlCon.Close();
             return tmpList;
         }
-        
+
+
+        public List<List<Object>> getAllPermissions()
+        {
+
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+
+            dc.CommandText = "SELECT * FROM ArchivePermissions";
+
+            DbDataReader dr = dc.ExecuteReader();
+
+            dr = dc.ExecuteReader();
+
+            List<List<Object>> tmpList = new List<List<Object>>();
+
+            while (dr.Read())
+            {
+                List<Object> tmpSubList = new List<Object>();
+                tmpSubList.Add(dr.GetInt32(0));
+                tmpSubList.Add(dr.GetString(1));
+                tmpList.Add(tmpSubList);
+            }
+
+            return tmpList;
+        }
     }
 }
