@@ -73,5 +73,28 @@ namespace ArchiveProject.Logic
         }
 
 
+
+        public void UpdatePermission(int id, string newName)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+
+            dc.CommandText = $"UPDATE ArchivePermissions SET name = '{newName}' WHERE id = {id}";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
+        public void UpdateTable(string tableHash, string tableNewName)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+
+            dc.CommandText = $"UPDATE ArchiveMapping SET name = '{tableNewName}' WHERE id = {tableHash}";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
     }
 }
