@@ -1,23 +1,29 @@
 ﻿@model List<KeyValuePair<string, string>>
 
-<div style="text-align: center;">
-    <table class="table">
+<table style="width:100%;margin-top:1em;">
+    <tr>
+        <th style="width:100%"><h2>Archive</h2></th>
+        <th style="vertical-align:bottom;"><a class="btn btn-default" asp-action="Index" asp-controller="Admin">Admin page</a></th>
+    </tr>
+</table>
+
+<div>
+    <table class="table" style="margin-top:3em;">
         <thead>
             <tr>
-                <th>Table</th>
+                <th>Table -- Choose an archive to Edit og Lookup</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach(KeyValuePair<string,string> table in Model)
+            @foreach (KeyValuePair<string, string> table in Model)
             {
                 <tr>
-                    <td><label>@table.Value</label></td>
-                    <td><a asp-controller="Archive" asp-action="Data" asp-route-id="@table.Key">Open</a></td>
+                    <td style="width:100%; vertical-align:middle;">@table.Value</td>
+                    <td><a class="btn btn-default" asp-controller="Archive" asp-action="Data" asp-route-id="@table.Key">Open</a></td>
                 </tr>
             }
         </tbody>
 
     </table>
-
 </div>
