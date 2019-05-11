@@ -65,5 +65,28 @@ namespace ArchiveProject.Logic
 
             dbContext.sqlCon.Close();
         }
+
+        public void addColToTable(string colName, string colType, string tableHash)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"ALTER TABLE [tb_{tableHash}] ADD COLUMN [{colName}] [{colType}]";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
+
+        public void removeColFromTable(string colName, string tableHash)
+        {
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = $"ALTER TABLE [tb_{tableHash}] DROP COLUMN [{colName}]";
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+        }
+
     }
 }
