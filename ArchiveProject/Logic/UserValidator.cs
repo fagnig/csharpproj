@@ -85,7 +85,7 @@ namespace ArchiveProject.Logic
             return false;
         }
 
-        public List<KeyValuePair<string, string>> getUserTableList(string userHash)
+        public List<List<Object>> getUserTableList(string userHash)
         {
             string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_role IN (";
 
@@ -93,7 +93,7 @@ namespace ArchiveProject.Logic
 
             if (userRoles.Count() == 0)
             {
-                return new List<KeyValuePair<string, string>>();
+                return new List<List<Object>>();
             }
 
             for (int i = 0; i < userRoles.Count(); i++)
@@ -146,11 +146,14 @@ namespace ArchiveProject.Logic
 
             dr = dc.ExecuteReader();
 
-            List<KeyValuePair<string, string>> tmpList = new List<KeyValuePair<string, string>>();
+            List<List<Object>> tmpList = new List<List<Object>>();
 
             while (dr.Read())
             {
-                tmpList.Add(new KeyValuePair<string, string>(dr.GetString(0), dr.GetString(1)));
+                List<Object> tmpSubList = new List<Object>();
+                tmpSubList.Add(dr.GetString(0));
+                tmpSubList.Add(dr.GetString(1));
+                tmpList.Add(tmpSubList);
             }
 
             dr.Close();

@@ -1,4 +1,4 @@
-﻿@model List<KeyValuePair<string, string>>
+﻿@model List<List<Object>>
 
 <table style="width:100%;margin-top:1em;">
     <tr>
@@ -19,11 +19,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (KeyValuePair<string, string> table in Model)
+            @foreach (List<Object> row in Model)
             {
                 <tr>
-                    <td style="width:100%; vertical-align:middle;">@table.Value</td>
-                    <td><a class="btn btn-default" asp-controller="Archive" asp-action="Data" asp-route-id="@table.Key">Open</a></td>
+                    <td style="width:100%; vertical-align:middle;">@row[1]</td>
+                    <td><a class="btn btn-default" asp-controller="Archive" asp-action="Data" asp-route-id="@row[0]">Open</a></td>
                 </tr>
             }
         </tbody>

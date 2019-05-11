@@ -41,6 +41,8 @@ namespace ArchiveProject.Logic
                 tmpList.Add(tmpSubList);
             }
 
+            dbContext.sqlCon.Close();
+
             return tmpList;
         }
 
@@ -68,6 +70,8 @@ namespace ArchiveProject.Logic
                 
                 tmpList.Add(tmpSubList);
             }
+
+            dbContext.sqlCon.Close();
 
             return tmpList;
         }

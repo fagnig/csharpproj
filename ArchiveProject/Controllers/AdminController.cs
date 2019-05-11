@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ArchiveProject.Data;
 using ArchiveProject.Logic;
+using ArchiveProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -27,7 +28,14 @@ namespace ArchiveProject.Controllers
             // Check if admin
             UserValidator uv = new UserValidator(dbContext);
             if(!uv.isUserAdmin(key)) { return RedirectToAction("Index", "Archive"); }
-            return View();
+
+            // Get Model
+            AdminViewModel avm = new AdminViewModel();
+            AdminPopulator ap = new AdminPopulator(dbContext);
+            avm.permissions = ap.getAllPermissions();
+            avm.users = ap.getAllUsers();
+            avm.table = uv.getUserTableList(key);
+            return View(avm);
         }
 
         public string LoadPermissions()
