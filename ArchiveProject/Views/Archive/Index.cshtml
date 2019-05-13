@@ -1,32 +1,84 @@
-﻿@model List<List<Object>>
-
-<table style="width:100%;margin-top:1em;">
-    <tr>
-        <th style="width:100%"><h2>Archive</h2></th>
-        @if ((bool)ViewData["isAdmin"]) 
-        {
-            <th style="vertical-align:bottom;"><a class="btn btn-default" asp-action="Index" asp-controller="Admin">Admin page</a></th>
-        }
-    </tr>
-</table>
-
-<div>
-    <table class="table" style="margin-top:3em;">
-        <thead>
-            <tr>
-                <th>Table -- Choose an archive to Edit og Lookup</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (List<Object> row in Model)
+﻿@model ArchiveViewModel
+<div id="Top" style="margin-top:1em;">
+    <table style="width:100%;margin-top:1em;">
+        <tr>
+            <th><h2>Archive Page</h2></th>
+            @if ((bool)ViewData["isAdmin"])
             {
-                <tr>
-                    <td style="width:100%; vertical-align:middle;">@row[1]</td>
-                    <td><a class="btn btn-default" asp-controller="Archive" asp-action="Data" asp-route-id="@row[0]">Open</a></td>
-                </tr>
+                <th style="text-align:right;vertical-align:bottom;"><a class="btn btn-default" asp-action="Index" asp-controller="Admin">Admin page</a></th>
             }
-        </tbody>
-
+        </tr>
+        <tr>
+            <th>
+                <select class="form-control" id="archive_selector">
+                    <option>Choose Archive</option>
+                    @foreach (List<Object> archive in (List<List<Object>>)ViewData["Archives"])
+                    { 
+                        <option value="@archive[0]">@archive[1]</option> 
+                    }
+                </select>
+            </th>
+            @if ((bool)ViewData["isAdmin"])
+            {
+                <th style="text-align:right"></th>
+            }
+        </tr>
     </table>
+</div>
+
+<div id="bottom" style="margin-top:3em;">
+    <div id="archive-titel">
+        <h4>@Model.tableTitle</h4>
+    </div>
+    <div style="width:100%; overflow-x:auto;">
+        <table id="table_data" class="table table-hover">
+            <thead>
+                <tr>
+                    <th colspan="2">Actions</th>
+                    @for (int i = 1; i < Model.typelist.Count; i++)
+                    {
+                        <th>@Model.typelist[i].Key</th>}
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (List<Object> rows in Model.values)
+                {
+                    <tr>
+                        <td><input type="button" class="btn btn-default edit" data-id="@rows[0]" data-table="@Model.tableHash" value="Edit" /></td>
+                        <td><input type="button" class="btn btn-default delete" data-id="@rows[0]" data-table="@Model.tableHash" value="Delete" /></td>
+                        @for (int i = 1; i < rows.Count; i++)
+                        {
+                            <td>
+                                @if (Model.typelist[i].Value.Name.Equals("String"))
+                                {
+                                    <input class="input-sm" type="text" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                }
+                                else if (Model.typelist[i].Value.Name.Equals("Boolean"))
+                                {
+                                    <input class="input-sm" type="checkbox" checked="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                }
+                                else if (Model.typelist[i].Value.Name.Equals("Int32"))
+                                {
+                                    <input class="input-sm" type="number" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                }
+                                else if (Model.typelist[i].Value.Name.Equals("Date"))
+                                {
+                                    <input class="input-sm" type="date" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+                @if (Model.values.Count > 0 && Model.values[0].Count > 0)
+                {
+                    <tr>
+                        <td colspan="2" style="text-align:center;padding-left:10px;">
+                            <input type="button" class="btn btn-default add-row" value="Add Row" />
+                        </td>
+                        <td colspan="@(Model.values[0].Count)"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

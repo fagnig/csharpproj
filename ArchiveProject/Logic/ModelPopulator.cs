@@ -28,7 +28,9 @@ namespace ArchiveProject.Logic
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
             dc.CommandText = $"SELECT * from [tb_{tableToGet}]";
-            DbDataReader dr = dc.ExecuteReader();
+            DbDataReader dr = null;
+            try { dr = dc.ExecuteReader(); }
+            catch (SqlException) { return new ArchiveViewModel(); }
             bool first = true;
 
             while (dr.Read())

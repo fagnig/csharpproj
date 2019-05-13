@@ -20,15 +20,33 @@ namespace ArchiveProject.Logic
 
         }
 
-        public void insertRow(string tableHash)
+        public object insertRow(string tableHash)
         {
             dbContext.sqlCon.Open();
-
             DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"INSERT INTO [tb_{tableHash}];";
-            dc.ExecuteNonQuery();
+            dc.CommandText = $"SELECT * FROM [tb_{tableHash}] WHERE 1=2;";
+            DbDataReader dr = dc.ExecuteReader();
+            dr.Read();
+            string columns = "";
+            string values = "";
+            for(int i = 1; i < dr.FieldCount; i++)
+            {
+                if(i == 1)
+                {
+                    columns += $"[{dr.GetName(i)}]";
+                    values += "NULL";
+                } else
+                {
+                    columns += $",[{dr.GetName(i)}]";
+                    values += ",NULL";
+                }
+            }
+            dr.Close();
 
+            dc.CommandText = $"INSERT INTO tb_{tableHash}({columns}) OUTPUT INSERTED.id VALUES({values});";
+            Object id = dc.ExecuteScalar();
             dbContext.sqlCon.Close();
+            return id;
         }
 
         public void updateFields(string id, string column, string table, string value)

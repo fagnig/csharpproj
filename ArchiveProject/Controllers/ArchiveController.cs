@@ -8,6 +8,7 @@ using ArchiveProject.Logic;
 using ArchiveProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArchiveProject.Controllers
 {
@@ -21,7 +22,7 @@ namespace ArchiveProject.Controllers
             dbContext = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string id)
         {
             // Check required tables
             TableDeployer td = new TableDeployer(dbContext);
@@ -34,8 +35,20 @@ namespace ArchiveProject.Controllers
             UserValidator uv = new UserValidator(dbContext);
             ViewData["isAdmin"] = uv.isUserAdmin(key);
 
-            // Get available archives
-            return View(uv.getUserTableList(key));
+            // Populate available archives
+            ViewData["Archives"] = uv.getUserTableList(key);
+
+            // Populate model
+            ModelPopulator mdl = new ModelPopulator(dbContext);
+            ArchiveViewModel avm = new ArchiveViewModel();
+            if(!String.IsNullOrEmpty(id))
+            {
+                avm = mdl.GetTable(id);
+                avm.tableHash = id;
+                avm.tableTitle = id;
+            }
+
+            return View(avm);
         }
 
         public IActionResult Data(string id)
@@ -55,6 +68,18 @@ namespace ArchiveProject.Controllers
             ModelUpdater mu = new ModelUpdater(dbContext);
 
             mu.updateFields(id, column, table, value);
+        }
+
+        public void DeleteDbRow(string id, string table)
+        {
+            ModelUpdater mu = new ModelUpdater(dbContext);
+            mu.dropRow(table, id);
+        }
+
+        public object CreateDbRow(string id)
+        {
+            ModelUpdater mu = new ModelUpdater(dbContext);
+            return mu.insertRow(id);
         }
     }
 }
