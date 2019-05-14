@@ -121,21 +121,17 @@
                         @foreach (List<Object> row in Model.table)
                         {
                             <tr>
-                                <td style="vertical-align:middle; width:25%;">@row[0]</td>
-                                <td style="vertical-align:middle; width:60%;"><input style="width:100%" class="input-sm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit" data-id="@row[0]" value="Edit" /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default assign" data-id="@row[0]" value="Columns" /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete" data-id="@row[0]" value="Delete" /></td>
+                                <td style="vertical-align:middle; width:25%;"><div class="archive-id">@row[0]</div></td>
+                                <td style="vertical-align:middle; width:60%;"><input style="width:100%" class="input-sm archive-name" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit-archive" data-id="@row[0]" value="Edit" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default columns-archive" data-id="@row[0]" value="Columns" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-archive" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="5"><input style="width:100%;" class="btn btn-default add-archive" type="button" value="Add Archive" /></th>
                         </tr>
                     </tfoot>
                 </table>

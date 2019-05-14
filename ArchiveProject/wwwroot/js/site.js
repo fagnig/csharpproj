@@ -122,5 +122,55 @@ $(document).ready(function () {
         }
         $(last).after(tobe);
     });
+
+    $(".add-row-archives").click(function (e) {
+        e.preventDefault();
+        // Get generated hash
+        var hash;
+        $.get('../../GetHash', {}, function (data) {
+            hash = data;
+        });
+
+        // Find correct row
+        var add = $(this).parent().parent();
+        var rows = add.siblings();
+        var last = $(rows[rows.length - 1]);
+        var tobe = $(last).clone();
+
+        // Set Id
+        var id_field = $(tobe).find('.archive-id');
+        id_field[0].value = hash;
+
+        // Fix input Field
+        var fields = $(tobe).find('input');
+        fields[0].value = "";
+        fields[0].removeAttribute("disabled");
+        fields[0].setAttribute("name", hash);
+        fields.dataset.id = hash;
+
+        // Save button
+        fields[1].value = "Save";
+        $(fields[1]).bind('click', function (e) {
+            e.preventDefault();
+            addRowArchive(this);
+        });
+
+        // Columns button
+        fields[2].value = "Columns";
+        fields[2].setAttribute('disabled', 'true');
+        $(fields[2]).bind('click', function (e) {
+            e.preventDefault();
+            //?
+        });
+
+        // Cancel button
+        fields[3].value = "Cancel";
+        $(fields[3]).bind('click', function (e) {
+            e.preventDefault();
+            cancel(this);
+        });
+
+        $(last).after(tobe);
+    });
 });
  
