@@ -27,19 +27,12 @@ namespace ArchiveProject.Logic
             dc.CommandText = $"SELECT * FROM [tb_{tableHash}] WHERE 1=2;";
             DbDataReader dr = dc.ExecuteReader();
             dr.Read();
-            string columns = "";
-            string values = "";
-            for(int i = 1; i < dr.FieldCount; i++)
+            string columns = $"[{dr.GetName(1)}]";
+            string values = "NULL";
+            for(int i = 2; i < dr.FieldCount; i++)
             {
-                if(i == 1)
-                {
-                    columns += $"[{dr.GetName(i)}]";
-                    values += "NULL";
-                } else
-                {
                     columns += $",[{dr.GetName(i)}]";
                     values += ",NULL";
-                }
             }
             dr.Close();
 

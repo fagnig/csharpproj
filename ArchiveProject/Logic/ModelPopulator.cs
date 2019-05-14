@@ -27,7 +27,7 @@ namespace ArchiveProject.Logic
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"SELECT * from [tb_{tableToGet}]";
+            dc.CommandText = $"SELECT * from [tb_{tableToGet}] ORDER BY id";
             DbDataReader dr = null;
             try { dr = dc.ExecuteReader(); }
             catch (SqlException) { return new ArchiveViewModel(); }

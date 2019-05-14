@@ -40,7 +40,7 @@ namespace ArchiveProject.Logic
             uint tmp = (uint) name.GetHashCode();
             string hashedname = tmp.ToString();
 
-            string sql = "CREATE TABLE tb_" + hashedname + "( id int NOT NULL IDENTITY(1,1), ";
+            string sql = "CREATE TABLE tb_" + hashedname + "( id int NOT NULL IDENTITY(1,1) PRIMARY KEY, ";
 
             for(int i = 0; i< schema.Count(); i++)
             {
