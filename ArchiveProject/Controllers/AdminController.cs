@@ -53,5 +53,35 @@ namespace ArchiveProject.Controllers
             System.Diagnostics.Debug.WriteLine("KIG DOG: " + json);
             return json;
         }
+
+        public string GetHash()
+        {
+            return new UserValidator(dbContext).GetHash();
+        }
+
+        public void InsertArchive(string hash, string name)
+        {
+            new TableDeployer(dbContext).CreateTable(name, hash);
+        }
+
+        public void AddColToArchive(string hash, string colName, string colType)
+        {
+            TableDeployer tb = new TableDeployer(dbContext);
+
+            if (!tb.typeMap.ContainsKey(colType)) { return; }
+
+            ModelUpdater md = new ModelUpdater(dbContext);
+            md.addColToTable(colName, tb.typeMap[colType], hash);
+        }
+
+        public void DeleteArchive(string hash)
+        {
+            new ModelUpdater(dbContext).dropTable(hash);
+        }
+
+        public void RenameArchive(string hash, string name)
+        {
+            new ModelUpdater(dbContext).updateFields(hash, "name", "ArchiveMapping", name);
+        }
     }
 }

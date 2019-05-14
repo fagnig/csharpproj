@@ -187,5 +187,10 @@ namespace ArchiveProject.Logic
 
             return tmpList;
         }
+
+        public string GetHash()
+        {
+            return ((uint)DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss").GetHashCode()).ToString();
+        }
     }
 }
