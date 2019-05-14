@@ -111,7 +111,7 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="body-archive">
                         @foreach (List<Object> row in Model.table)
                         {
                             <tr>
@@ -122,10 +122,12 @@
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-archive" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
+                    </tbody>
+                    <tfoot>
                         <tr>
                             <td colspan="5"><input style="width:100%;" class="btn btn-default add-archive" type="button" value="Add Archive" /></td>
                         </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -133,6 +135,8 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript" src="~/js/archive.js"></script>
+    <script type="text/javascript" src="~/js/admin-archive.js"></script>
+    <script type="text/javascript" src="~/js/admin-perm.js"></script>
+    <script type="text/javascript" src="~/js/admin-users.js"></script>
 }
 

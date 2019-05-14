@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
@@ -76,7 +77,7 @@ namespace ArchiveProject.Data
 
             DbCommand dc = sqlCon.CreateCommand();
             dc.CommandText = sqlString;
-            DbDataReader ret = dc.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+            DbDataReader ret = dc.ExecuteReader(CommandBehavior.CloseConnection);
 
             return ret;
         }
@@ -88,8 +89,7 @@ namespace ArchiveProject.Data
             DbCommand dc = sqlCon.CreateCommand();
             try
             {
-                dc.CommandText = "BEGIN TRANSACTION;";
-                dc.ExecuteNonQuery();
+                
 
                 foreach (string sqlString in sqlStrings)
                 {
@@ -97,14 +97,12 @@ namespace ArchiveProject.Data
                     dc.ExecuteNonQuery();
                 }
 
-                dc.CommandText = "COMMIT;";
-                dc.ExecuteNonQuery();
+                
 
             }
             catch (SqlException)
             {
-                dc.CommandText = "ROLLBACK;";
-                dc.ExecuteNonQuery();
+                
             }
             sqlCon.Close();
         }

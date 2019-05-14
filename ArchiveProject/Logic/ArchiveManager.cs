@@ -48,12 +48,12 @@ namespace ArchiveProject.Logic
             dbContext.ExecNonQuery($"UPDATE [tb_{table}] SET [{column}] = '{value}' WHERE id = '{id}'");
         }
 
-        public ArchiveViewModel GetTable(string tableToGet)
+        public ArchiveViewModel GetTable(string archiveId)
         {
-            ArchiveViewModel table = new ArchiveViewModel();
+            ArchiveViewModel archive = new ArchiveViewModel();
 
             DbDataReader dr;
-            try { dr = dbContext.ExecReader($"SELECT * FROM [tb_{tableToGet}] ORDER BY id"); }
+            try { dr = dbContext.ExecReader($"SELECT * FROM [tb_{archiveId}] ORDER BY id"); }
             catch (SqlException) { return new ArchiveViewModel(); }
             bool first = true;
 
@@ -65,7 +65,7 @@ namespace ArchiveProject.Logic
                 {
                     if (first)
                     {
-                        table.typelist.Add(new KeyValuePair<string, Type>(dr.GetName(i), dr.GetFieldType(i)));
+                        archive.typelist.Add(new KeyValuePair<string, Type>(dr.GetName(i), dr.GetFieldType(i)));
 
                     }
 
@@ -74,12 +74,15 @@ namespace ArchiveProject.Logic
 
                 first = false;
 
-                table.values.Add(tmpList);
+                archive.values.Add(tmpList);
             }
 
             dr.Close();
 
-            return table;
+            archive.tableHash = archiveId;
+            archive.tableTitle = (string) dbContext.ExecScalar($"SELECT [name] FROM [ArchiveMapping] WHERE [id] = '{archiveId}';");
+
+            return archive;
         }
 
 
@@ -120,6 +123,12 @@ namespace ArchiveProject.Logic
 
             ////////////////////////////////
             ///
+
+            if (tmpHashes.Count() == 0)
+            {
+                return new List<List<Object>>();
+            }
+
             sqlBuild = $"SELECT * FROM ArchiveMapping WHERE id IN (";
             for (int i = 0; i < tmpHashes.Count(); i++)
             {

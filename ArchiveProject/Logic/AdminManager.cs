@@ -56,7 +56,7 @@ namespace ArchiveProject.Logic
             List<string> permSql = new List<string>
             {
                 $"CREATE TABLE [tb_{hash}] ( id int NOT NULL IDENTITY(1,1) PRIMARY KEY);",//Create new table
-                $"INSERT INTO ArchiveMapping VALUES ( ['{hash}'], ['{name}']);" //Map new table
+                $"INSERT INTO ArchiveMapping (id, name) VALUES ( '{hash}', '{name}');" //Map new table
             };
 
             dbContext.ExecTrans(permSql);
