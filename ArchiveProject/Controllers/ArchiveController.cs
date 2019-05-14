@@ -17,9 +17,14 @@ namespace ArchiveProject.Controllers
 
         private readonly ApplicationDbContext dbContext;
 
+        private PermissionManager pm;
+        private ArchiveManager am;
+
         public ArchiveController(ApplicationDbContext context)
         {
             dbContext = context;
+            pm = new PermissionManager(dbContext);
+            am = new ArchiveManager(dbContext);
         }
 
         public IActionResult Index(string id)
@@ -32,54 +37,31 @@ namespace ArchiveProject.Controllers
             var key = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             // Check user
-            UserValidator uv = new UserValidator(dbContext);
-            ViewData["isAdmin"] = uv.isUserAdmin(key);
+            ViewData["isAdmin"] = pm.IsUserAdmin(key);
 
             // Populate available archives
-            ViewData["Archives"] = uv.getUserTableList(key);
+            ViewData["Archives"] = am.GetUserTableList(key);
 
             // Populate model
-            ModelPopulator mdl = new ModelPopulator(dbContext);
             ArchiveViewModel avm = new ArchiveViewModel();
-            if(!String.IsNullOrEmpty(id))
-            {
-                avm = mdl.GetTable(id);
-                avm.tableHash = id;
-                avm.tableTitle = id;
-            }
+            if(!String.IsNullOrEmpty(id)) { avm = am.GetTable(id); }
 
             return View(avm);
         }
 
-        public IActionResult Data(string id)
-        {
-
-            ModelPopulator mdl = new ModelPopulator(dbContext);
-
-
-            ArchiveViewModel tmp = mdl.GetTable(string.IsNullOrEmpty(id) ? "ArchiveMapping" : id);
-            tmp.tableHash = string.IsNullOrEmpty(id) ? "ArchiveMapping" : id;
-            tmp.tableTitle = string.IsNullOrEmpty(id) ? "ArchiveMapping" : id;
-            return View(tmp);
-        }
-
         public void UpdateDbValue(string id, string column, string table, string value)
         {
-            ModelUpdater mu = new ModelUpdater(dbContext);
-
-            mu.updateFields(id, column, table, value);
+            am.UpdateField(id, column, table, value);
         }
 
         public void DeleteDbRow(string id, string table)
         {
-            ModelUpdater mu = new ModelUpdater(dbContext);
-            mu.dropRow(table, id);
+            am.DropRow(table, id);
         }
 
         public object CreateDbRow(string id)
         {
-            ModelUpdater mu = new ModelUpdater(dbContext);
-            return mu.insertRow(id);
+            return am.InsertRow(id);
         }
     }
 }

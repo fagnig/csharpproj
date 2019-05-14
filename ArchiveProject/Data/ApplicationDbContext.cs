@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
@@ -46,15 +47,8 @@ namespace ArchiveProject.Data
         public string GetHash()
         {
             Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss"), 0x10, 0x3e8);
-            byte[] dst = new byte[0x31];
-
             string tmp = Convert.ToBase64String(bytes.GetBytes(0x20));
-
-            tmp.Replace('+','a');
-            tmp.Replace('=', 'a');
-            tmp.Replace('/', 'a');
-
-            return tmp;
+            return tmp.Replace('+', 'a').Replace('=', 'a').Replace('/', 'a');
         }
 
         public void ExecNonQuery(string sqlString)
@@ -87,7 +81,7 @@ namespace ArchiveProject.Data
 
             DbCommand dc = sqlCon.CreateCommand();
             dc.CommandText = sqlString;
-            DbDataReader ret = dc.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+            DbDataReader ret = dc.ExecuteReader(CommandBehavior.CloseConnection);
 
             return ret;
         }
@@ -99,8 +93,7 @@ namespace ArchiveProject.Data
             DbCommand dc = sqlCon.CreateCommand();
             try
             {
-                dc.CommandText = "BEGIN TRANSACTION;";
-                dc.ExecuteNonQuery();
+                
 
                 foreach (string sqlString in sqlStrings)
                 {
@@ -108,14 +101,12 @@ namespace ArchiveProject.Data
                     dc.ExecuteNonQuery();
                 }
 
-                dc.CommandText = "COMMIT;";
-                dc.ExecuteNonQuery();
+                
 
             }
             catch (SqlException)
             {
-                dc.CommandText = "ROLLBACK;";
-                dc.ExecuteNonQuery();
+                
             }
             sqlCon.Close();
         }
