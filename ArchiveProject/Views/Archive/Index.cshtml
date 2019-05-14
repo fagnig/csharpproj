@@ -13,8 +13,8 @@
                 <select class="form-control" id="archive_selector">
                     <option>Choose Archive</option>
                     @foreach (List<Object> archive in (List<List<Object>>)ViewData["Archives"])
-                    { 
-                        <option value="@archive[0]">@archive[1]</option> 
+                    {
+                        <option value="@archive[0]">@archive[1]</option>
                     }
                 </select>
             </th>
@@ -44,26 +44,26 @@
                 @foreach (List<Object> rows in Model.values)
                 {
                     <tr>
-                        <td><input type="button" class="btn btn-default edit" data-id="@rows[0]" data-table="@Model.tableHash" value="Edit" /></td>
-                        <td><input type="button" class="btn btn-default delete" data-id="@rows[0]" data-table="@Model.tableHash" value="Delete" /></td>
+                        <td><input type="button" class="btn btn-default edit-row" data-id="@rows[0]" data-table="@Model.tableHash" value="Edit" /></td>
+                        <td><input type="button" class="btn btn-default delete-row" data-id="@rows[0]" data-table="@Model.tableHash" value="Delete" /></td>
                         @for (int i = 1; i < rows.Count; i++)
                         {
                             <td>
                                 @if (Model.typelist[i].Value.Name.Equals("String"))
                                 {
-                                    <input class="input-sm" type="text" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                    <input class="input-sm field-value" type="text" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
                                 }
                                 else if (Model.typelist[i].Value.Name.Equals("Boolean"))
                                 {
-                                    <input class="input-sm" type="checkbox" checked="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                    <input class="input-sm field-value" type="checkbox" checked="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
                                 }
                                 else if (Model.typelist[i].Value.Name.Equals("Int32"))
                                 {
-                                    <input class="input-sm" type="number" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                    <input class="input-sm field-value" type="number" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
                                 }
                                 else if (Model.typelist[i].Value.Name.Equals("Date"))
                                 {
-                                    <input class="input-sm" type="date" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
+                                    <input class="input-sm field-value" type="date" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
                                 }
                             </td>
                         }
@@ -82,3 +82,9 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/admin-archive.js"></script>
+    <script type="text/javascript" src="~/js/admin-perm.js"></script>
+    <script type="text/javascript" src="~/js/admin-users.js"></script>
+}
