@@ -59,29 +59,29 @@ namespace ArchiveProject.Controllers
             return new UserValidator(dbContext).GetHash();
         }
 
-        public void InsertArchive(string hash, string name)
+        public void InsertArchive(string id, string name)
         {
-            new TableDeployer(dbContext).CreateTable(name, hash);
+            new TableDeployer(dbContext).CreateTable(name, id);
         }
 
-        public void AddColToArchive(string hash, string colName, string colType)
+        public void AddColToArchive(string id, string colName, string colType)
         {
             TableDeployer tb = new TableDeployer(dbContext);
 
             if (!tb.typeMap.ContainsKey(colType)) { return; }
 
             ModelUpdater md = new ModelUpdater(dbContext);
-            md.addColToTable(colName, tb.typeMap[colType], hash);
+            md.addColToTable(colName, tb.typeMap[colType], id);
         }
 
-        public void DeleteArchive(string hash)
+        public void DeleteArchive(string id)
         {
-            new ModelUpdater(dbContext).dropTable(hash);
+            new ModelUpdater(dbContext).dropTable(id);
         }
 
-        public void RenameArchive(string hash, string name)
+        public void RenameArchive(string id, string name)
         {
-            new ModelUpdater(dbContext).updateFields(hash, "name", "ArchiveMapping", name);
+            new ModelUpdater(dbContext).updateFields(id, "name", "ArchiveMapping", name);
         }
 
 
