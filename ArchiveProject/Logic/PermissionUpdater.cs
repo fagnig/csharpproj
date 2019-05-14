@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ArchiveProject.Logic
 {
-    public class PermissionUpdater
+    public class PermissionsManager
     {
         private readonly ApplicationDbContext dbContext;
 
-        public PermissionUpdater(ApplicationDbContext context)
+        public PermissionsManager(ApplicationDbContext context)
         {
             dbContext = context;
 

@@ -12,15 +12,101 @@ namespace ArchiveProject.Data
     {
         public DbConnection sqlCon;
 
+        public Dictionary<string, string> typeMap;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            typeMap = new Dictionary<string, string>
+            {
+                ["String"] = "nvarchar(256)",
+                ["Boolean"] = "bit",
+                ["Integer"] = "int",
+                ["Date"] = "date"
+            };
 
-            //SqlCommand sqlCommand = new SqlCommand(sql, sqlCon);
-            //sqlCommand.ExecuteNonQuery();
-            // sqlCon.Close();
             sqlCon = this.Database.GetDbConnection();
         }
 
+
+
+        public void DropTable(string tableToDrop)
+        {
+            sqlCon.Open();
+
+            DbCommand dc = sqlCon.CreateCommand();
+            dc.CommandText = $"DROP TABLE [{tableToDrop}]";
+            dc.ExecuteNonQuery();
+
+            sqlCon.Close();
+        }
+
+        public string GetHash()
+        {
+            return ((uint)DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss").GetHashCode()).ToString();
+        }
+
+        public void ExecNonQuery(string sqlString)
+        {
+            sqlCon.Open();
+
+            DbCommand dc = sqlCon.CreateCommand();
+            dc.CommandText = sqlString;
+            dc.ExecuteNonQuery();
+
+            sqlCon.Close();
+        }
+
+        public Object ExecScalar(string sqlString)
+        {
+            sqlCon.Open();
+
+            DbCommand dc = sqlCon.CreateCommand();
+            dc.CommandText = sqlString;
+            Object ret = dc.ExecuteScalar();
+
+            sqlCon.Close();
+
+            return ret;
+        }
+
+        public DbDataReader ExecReader(string sqlString)
+        {
+            sqlCon.Open();
+
+            DbCommand dc = sqlCon.CreateCommand();
+            dc.CommandText = sqlString;
+            DbDataReader ret = dc.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+
+            return ret;
+        }
+
+        public void ExecTrans(List<string> sqlStrings)
+        {
+            sqlCon.Open();
+
+            DbCommand dc = sqlCon.CreateCommand();
+            try
+            {
+                dc.CommandText = "BEGIN TRANSACTION;";
+                dc.ExecuteNonQuery();
+
+                foreach (string sqlString in sqlStrings)
+                {
+                    dc.CommandText = sqlString;
+                    dc.ExecuteNonQuery();
+                }
+
+                dc.CommandText = "COMMIT;";
+                dc.ExecuteNonQuery();
+
+            }
+            catch (SqlException)
+            {
+                dc.CommandText = "ROLLBACK;";
+                dc.ExecuteNonQuery();
+            }
+            sqlCon.Close();
+        }
     }
 }

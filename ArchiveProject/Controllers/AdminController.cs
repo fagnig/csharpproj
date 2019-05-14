@@ -92,7 +92,7 @@ namespace ArchiveProject.Controllers
 
         public void DeletePermission(string id)
         {
-            new PermissionUpdater(dbContext).deletePermission(id);
+            new PermissionsManager(dbContext).deletePermission(id);
         }
     }
 }

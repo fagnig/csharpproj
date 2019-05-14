@@ -20,42 +20,6 @@ namespace ArchiveProject.Logic
 
         }
 
-        public ArchiveViewModel GetTable(string tableToGet)
-        {
-            ArchiveViewModel table = new ArchiveViewModel();
 
-            dbContext.sqlCon.Open();
-
-            DbCommand dc = dbContext.sqlCon.CreateCommand();
-            dc.CommandText = $"SELECT * FROM [tb_{tableToGet}] ORDER BY id";
-            DbDataReader dr = null;
-            try { dr = dc.ExecuteReader(); }
-            catch (SqlException) { return new ArchiveViewModel(); }
-            bool first = true;
-
-            while (dr.Read())
-            {
-                List<Object> tmpList = new List<object>();
-
-                for (int i = 0; i < dr.FieldCount; i++)
-                {
-                    if (first)
-                    {
-                        table.typelist.Add(new KeyValuePair<string, Type>(dr.GetName(i), dr.GetFieldType(i)));
-                       
-                    }
-
-                    tmpList.Add(dr.GetValue(i));
-                }
-
-                first = false;
-
-                table.values.Add(tmpList);
-            }
-
-            dbContext.sqlCon.Close();
-
-            return table;
-        }
     }
 }
