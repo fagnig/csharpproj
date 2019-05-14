@@ -47,6 +47,41 @@ function saveArchive(btn) {
     });
 };
 
+function buildArchiveModal(btn) {
+    var id = $(btn)[0].dataset.id;
+    var modalBody = $('.archive-modal-body');
+
+    modalBody.append(row);
+}
+
+function buildModalRow(id, type) {
+    var row = '<tr>';
+    if (type == 'add') {
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<input style="width:100%" class="input-sm name-modal" type="text" value="" name="' + id + '" data-id="' + id + '"/>';
+        row += '</td>';
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<select style=width:100% class="input-sm type-modal" data-id="' + id + '" name="' + id + '">'
+        row += '<option value="String">Text</option><option value="Int32">Number</option><option value="Boolean">True/False</option><option value="Date">Date</option></select>'
+        row += '</td>';
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<input type="button" class="btn btn-default add-modal" data-id="' + id + '" value="Add" />';
+        row += '</td>';
+    } else {
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<input style="width:100%" class="input-sm name-modal" type="text" value="" name="' + id + '" data-id="' + id + '" disabled />';
+        row += '</td>';
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<select style=width:100% class="input-sm type-modal" data-id="' + id + '" disabled></select>'
+        row += '</td>';
+        row += '<td style="vertical-align:middle; width:33%;">';
+        row += '<input type="button" class="btn btn-default delete-modal" data-id="' + id + '" value="Delete" />';
+        row += '</td>';
+    }
+    row += '</tr>';
+    return row;
+}
+
 function appendArchive(btn, data) {
     var row = '<tr>';
     row += '<td style="vertical-align:middle; width:25%;">';
@@ -88,7 +123,7 @@ function appendArchive(btn, data) {
     fields[2].setAttribute('disabled', 'true');
     $(fields[2]).unbind().bind('click', function (e) {
         e.preventDefault();
-        //?
+        buildArchiveModal(this);
     });
 
     // Cancel button
@@ -124,6 +159,11 @@ $(document).ready(function () {
     $(".delete-archive").unbind().bind('click', function (e) {
         e.preventDefault();
         deleteArchive(this);
+    });
+
+    $(".columns-archive").unbind().bind('click', function (e) {
+        e.preventDefault();
+        buildArchiveModal(this);
     });
 
     $(".add-archive").unbind().bind('click', function (e) {

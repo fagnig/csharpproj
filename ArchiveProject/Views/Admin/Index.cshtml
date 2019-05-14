@@ -118,7 +118,7 @@
                                 <td style="vertical-align:middle; width:25%;"><div class="archive-id">@row[0]</div></td>
                                 <td style="vertical-align:middle; width:60%;"><input style="width:100%" class="input-sm archive-name" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit-archive" data-id="@row[0]" value="Edit" /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default columns-archive" data-id="@row[0]" value="Columns" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default columns-archive" data-toggle="modal" data-target="#archiveModal" data-id="@row[0]" value="Columns" /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-archive" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
@@ -129,6 +129,82 @@
                         </tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="permModal" tabindex="-1" role="dialog" aria-labelledby="permModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="permModalLabel">Assign archives</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Assign user permissions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="archiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveModalLabel">Edit Columns</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Column Name</th>
+                            <th>Column Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="archive-modal-body">
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

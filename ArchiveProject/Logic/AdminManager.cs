@@ -79,7 +79,7 @@ namespace ArchiveProject.Logic
 
         public void RenameArchive(string tableHash, string tableNewName)
         {
-            dbContext.ExecNonQuery($"UPDATE ArchiveMapping SET name = '{tableNewName}' WHERE id = {tableHash}");
+            dbContext.ExecNonQuery($"UPDATE ArchiveMapping SET name = '{tableNewName}' WHERE id = '{tableHash}'");
         }
 
         public List<List<Object>> GetArchives()

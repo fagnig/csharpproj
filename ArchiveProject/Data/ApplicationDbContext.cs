@@ -47,15 +47,8 @@ namespace ArchiveProject.Data
         public string GetHash()
         {
             Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss"), 0x10, 0x3e8);
-            byte[] dst = new byte[0x31];
-
             string tmp = Convert.ToBase64String(bytes.GetBytes(0x20));
-
-            tmp.Replace('+','a');
-            tmp.Replace('=', 'a');
-            tmp.Replace('/', 'a');
-
-            return tmp;
+            return tmp.Replace('+', 'a').Replace('=', 'a').Replace('/', 'a');
         }
 
         public void ExecNonQuery(string sqlString)
