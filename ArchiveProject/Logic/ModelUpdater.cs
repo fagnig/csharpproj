@@ -74,6 +74,8 @@ namespace ArchiveProject.Logic
             dc.CommandText = $"DROP TABLE [tb_{tableHash}]";
             dc.ExecuteNonQuery();
 
+            dc.CommandText = $"DELETE FROM [ArchiveMapping] WHERE id = '{tableHash}'";
+
             dbContext.sqlCon.Close();
         }
 
