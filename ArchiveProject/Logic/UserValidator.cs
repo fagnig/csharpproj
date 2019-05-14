@@ -87,7 +87,7 @@ namespace ArchiveProject.Logic
 
         public List<List<Object>> getUserTableList(string userHash)
         {
-            string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_role IN (";
+            string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_perm IN (";
 
             List<int> userRoles = getUserRoles(userHash);
 
