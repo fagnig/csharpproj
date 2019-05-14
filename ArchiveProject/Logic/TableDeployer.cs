@@ -55,9 +55,6 @@ namespace ArchiveProject.Logic
                 return -1;
             }
 
-            uint tmp = (uint) DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss").GetHashCode();
-
-            string hashedname = tmp.ToString();
 
             string sql = "CREATE TABLE tb_" + hash + "( id int NOT NULL IDENTITY(1,1) PRIMARY KEY, ";
 
@@ -112,7 +109,7 @@ namespace ArchiveProject.Logic
             catch (SqlException) {/*Table exists*/}
 
             try {
-                dc.CommandText = "CREATE TABLE ArchivePermissions( id int NOT NULL IDENTITY(0,1), name nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermissions( id nvarchar(256) NOT NULL, name nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}
@@ -130,7 +127,7 @@ namespace ArchiveProject.Logic
             catch (SqlException) {/*Admin role exists*/}
 
             try { 
-                dc.CommandText = "CREATE TABLE ArchivePermMapping( id_perm int, id_table nvarchar(256));";
+                dc.CommandText = "CREATE TABLE ArchivePermMapping( id_perm nvarchar(256), id_table nvarchar(256));";
                 dc.ExecuteNonQuery();
             }
             catch (SqlException) {/*Table exists*/}

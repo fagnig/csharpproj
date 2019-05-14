@@ -83,5 +83,16 @@ namespace ArchiveProject.Controllers
         {
             new ModelUpdater(dbContext).updateFields(hash, "name", "ArchiveMapping", name);
         }
+
+
+        public void RenamePermission(string id, string name)
+        {
+            new ModelUpdater(dbContext).updateFields(id, "name", "ArchivePermissions", name);
+        }
+
+        public void DeletePermission(string id)
+        {
+            new PermissionUpdater(dbContext).deletePermission(id);
+        }
     }
 }

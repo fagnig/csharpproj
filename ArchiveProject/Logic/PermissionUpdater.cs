@@ -18,13 +18,13 @@ namespace ArchiveProject.Logic
 
         }
 
-        public void assignPermToUser(string userHash, int perm)
+        public void assignPermToUser(string userHash, string perm)
         {
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
 
-            dc.CommandText = $"INSERT IGNORE INTO [ArchiveUserPermMapping] VALUES ('{userHash}', {perm});";
+            dc.CommandText = $"INSERT IGNORE INTO [ArchiveUserPermMapping] VALUES ('{userHash}', '{perm}');";
             dc.ExecuteNonQuery();
 
             dbContext.sqlCon.Close();
@@ -35,31 +35,31 @@ namespace ArchiveProject.Logic
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
 
-            dc.CommandText = $"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm={perm}, id_user = '{userHash}');";
+            dc.CommandText = $"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm=['{perm}'], id_user = ['{userHash}']);";
             dc.ExecuteNonQuery();
 
             dbContext.sqlCon.Close();
         }
 
-        public void assignTableToPerm(string tableHash,int perm)
+        public void assignTableToPerm(string tableHash,string perm)
         {
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
 
-            dc.CommandText = $"INSERT IGNORE INTO [ArchivePermMapping] VALUES ({perm}, '{tableHash}');";
+            dc.CommandText = $"INSERT IGNORE INTO [ArchivePermMapping] VALUES (['{perm}'], ['{tableHash}']);";
             dc.ExecuteNonQuery();
             
             dbContext.sqlCon.Close();
         }
 
-        public void removeTablefromPerm(string tableHash, int perm)
+        public void removeTablefromPerm(string tableHash, string perm)
         {
             dbContext.sqlCon.Open();
 
             DbCommand dc = dbContext.sqlCon.CreateCommand();
 
-            dc.CommandText = $"DELETE FROM [ArchivePermMapping] WHERE id_role={perm}, id_table = '{tableHash}');";
+            dc.CommandText = $"DELETE FROM [ArchivePermMapping] WHERE id_role=['{perm}'], id_table = ['{tableHash}']);";
             dc.ExecuteNonQuery();
 
             dbContext.sqlCon.Close();
@@ -83,7 +83,7 @@ namespace ArchiveProject.Logic
             dbContext.sqlCon.Close();
         }
 
-        public void deletePermission(int perm)
+        public void deletePermission(string perm)
         {
             dbContext.sqlCon.Open();
 
@@ -93,13 +93,13 @@ namespace ArchiveProject.Logic
                 dc.CommandText = "BEGIN TRANSACTION;";
                 dc.ExecuteNonQuery();
 
-                dc.CommandText = $"DELETE FROM ArchivePermMapping WHERE id_perm = {perm}";
+                dc.CommandText = $"DELETE FROM ArchivePermMapping WHERE id_perm = [{perm}]";
                 dc.ExecuteNonQuery();
 
-                dc.CommandText = $"DELETE FROM ArchiveUserPermMapping WHERE id_perm = {perm}";
+                dc.CommandText = $"DELETE FROM ArchiveUserPermMapping WHERE id_perm = [{perm}]";
                 dc.ExecuteNonQuery();
 
-                dc.CommandText = $"DELETE FROM ArchivePermissions WHERE id = {perm}";
+                dc.CommandText = $"DELETE FROM ArchivePermissions WHERE id = [{perm}]";
                 dc.ExecuteNonQuery();
 
                 dc.CommandText = "COMMIT;";
