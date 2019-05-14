@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,7 +45,9 @@ namespace ArchiveProject.Data
 
         public string GetHash()
         {
-            return ((uint)DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss").GetHashCode()).ToString();
+            Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss"), 0x10, 0x3e8);
+            byte[] dst = new byte[0x31];
+            return Convert.ToBase64String(bytes.GetBytes(0x20));
         }
 
         public void ExecNonQuery(string sqlString)
