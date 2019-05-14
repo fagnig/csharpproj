@@ -28,7 +28,7 @@ function editArchive(btn) {
     inputField.removeAttribute("disabled");
 
     $(btn)[0].value = "Save";
-    $(btn).bind('click', function (e) {
+    $(btn).unbind().bind('click', function (e) {
         e.preventDefault();
         saveArchive(this);
     });
@@ -41,11 +41,57 @@ function saveArchive(btn) {
     $.get('Admin/RenameArchive/' + inputField.dataset.id + '?name=' + inputField.value);
 
     $(btn)[0].value = "Edit";
-    $(btn).bind('click', function (e) {
+    $(btn).unbind().bind('click', function (e) {
         e.preventDefault();
         editArchive(this);
     });
 };
+
+function copyArchive(btn, data) {
+    // Find correct row
+    var add = $(btn).parent().parent();
+    var rows = add.siblings();
+    var last = $(rows[rows.length - 1]);
+    var tobe = $(last).clone();
+
+    // Set Id
+    var id_field = $(tobe).find('.archive-id');
+    id_field[0].innerText = data;
+
+    // Fix input Field
+    var fields = $(tobe).find('input');
+    fields[0].value = "";
+    fields[0].removeAttribute("disabled");
+    fields[0].setAttribute("name", data);
+    fields[0].dataset.id = data;
+
+    // Save button
+    fields[1].value = "Add";
+    fields[1].dataset.id = data;
+    $(fields[1]).bind('click', function (e) {
+        e.preventDefault();
+        addArchive(this);
+    });
+
+    // Columns button
+    fields[2].value = "Columns";
+    fields[2].dataset.id = data;
+    fields[2].setAttribute('disabled', 'true');
+    $(fields[2]).bind('click', function (e) {
+        e.preventDefault();
+        //?
+    });
+
+    // Cancel button
+    fields[3].value = "Cancel";
+    fields[3].dataset.id = data;
+    $(fields[3]).bind('click', function (e) {
+        e.preventDefault();
+        cancel(this);
+    });
+
+    $(last).after(tobe);
+}
 
 function deleteArchive(btn) {
     if (confirm('Are you sure?')) {
@@ -64,64 +110,19 @@ function cancel(btn) {
 
 $(document).ready(function () {
 
-    $('.edit-archive').bind('click', function (e) {
+    $('.edit-archive').unbind().bind('click', function (e) {
         e.preventDefault();
         editArchive(this);
     });
 
-    $(".delete-archive").bind('click', function (e) {
+    $(".delete-archive").unbind().bind('click', function (e) {
         e.preventDefault();
         deleteArchive(this);
     });
 
-    $(".add-archive").click(function (e) {
+    $(".add-archive").unbind().bind('click', function (e) {
         e.preventDefault();
-        // Get generated hash
         var btn = $(this);
-        $.get('Admin/GetHash', {}, function (data) {
-            // Find correct row
-            var add = $(btn).parent().parent();
-            var rows = add.siblings();
-            var last = $(rows[rows.length - 1]);
-            var tobe = $(last).clone();
-
-            // Set Id
-            var id_field = $(tobe).find('.archive-id');
-            id_field[0].innerText = data;
-
-            // Fix input Field
-            var fields = $(tobe).find('input');
-            fields[0].value = "";
-            fields[0].removeAttribute("disabled");
-            fields[0].setAttribute("name", data);
-            fields[0].dataset.id = data;
-
-            // Save button
-            fields[1].value = "Add";
-            fields[1].dataset.id = data;
-            $(fields[1]).bind('click', function (e) {
-                e.preventDefault();
-                addArchive(this);
-            });
-
-            // Columns button
-            fields[2].value = "Columns";
-            fields[2].dataset.id = data;
-            fields[2].setAttribute('disabled', 'true');
-            $(fields[2]).bind('click', function (e) {
-                e.preventDefault();
-                //?
-            });
-
-            // Cancel button
-            fields[3].value = "Cancel";
-            fields[3].dataset.id = data;
-            $(fields[3]).bind('click', function (e) {
-                e.preventDefault();
-                cancel(this);
-            });
-
-            $(last).after(tobe);
-        });
+        $.get('Admin/GetHash', {}, function (data) { copyArchive(btn, data); });
     });
 });
