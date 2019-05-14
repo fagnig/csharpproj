@@ -7,7 +7,7 @@
     </tr>
 </table>
 
-<div style="margin-top:3em;"class="panel-group" id="accordion">
+<div style="margin-top:3em;" class="panel-group" id="accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -29,26 +29,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(List<Object> row in Model.permissions)
+                        @foreach (List<Object> row in Model.permissions)
                         {
-                        <tr>
-                            <td style="vertical-align:middle; width:5%;">@row[0]</td>
-                            <td style="vertical-align:middle; width:80%;"><input style="width:100%" class="input-sm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
-                            <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit" data-id="@row[0]" value="Edit" /></td>
-                            <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default assign" data-id="@row[0]" value="Assign" /></td>
-                            <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete" data-id="@row[0]" value="Delete" /></td>
-                        </tr>
+                            <tr>
+                                <td style="vertical-align:middle; width:5%;"><div class="id-perm">@row[0]</div></td>
+                                <td style="vertical-align:middle; width:80%;"><input style="width:100%" class="input-sm name-perm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit-perm" data-id="@row[0]" value="Edit" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default assign-perm" data-id="@row[0]" value="Assign" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-perm" data-id="@row[0]" value="Delete" /></td>
+                            </tr>
                         }
-                    </tbody>
-                    <tfoot>
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td colspan="5"><input style="width:100%;" class="btn btn-default add-perm" type="button" value="Add Permission" /></td>
                         </tr>
-                    </tfoot>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -128,15 +122,17 @@
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-archive" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
-                    </tbody>
-                    <tfoot>
                         <tr>
-                            <th colspan="5"><input style="width:100%;" class="btn btn-default add-archive" type="button" value="Add Archive" /></th>
+                            <td colspan="5"><input style="width:100%;" class="btn btn-default add-archive" type="button" value="Add Archive" /></td>
                         </tr>
-                    </tfoot>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/Admin.js"></script>
+}
 

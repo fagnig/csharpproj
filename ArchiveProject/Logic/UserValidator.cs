@@ -108,10 +108,7 @@ namespace ArchiveProject.Logic
 
             sqlBuild += ");";
 
-            if (isUserAdmin(userHash))
-            {
-                sqlBuild = "SELECT * FROM ArchivePermMapping";
-            }
+
 
             dbContext.sqlCon.Open();
             DbCommand dc = dbContext.sqlCon.CreateCommand();
@@ -127,6 +124,8 @@ namespace ArchiveProject.Logic
             }
             dr.Close();
 
+            dbContext.sqlCon.Close();
+
             ////////////////////////////////
             ///
             sqlBuild = $"SELECT * FROM ArchiveMapping WHERE id IN (";
@@ -141,6 +140,13 @@ namespace ArchiveProject.Logic
             }
 
             sqlBuild += ");";
+
+            if (isUserAdmin(userHash))
+            {
+                sqlBuild = "SELECT * FROM ArchiveMapping";
+            }
+
+            dbContext.sqlCon.Open();
 
             dc.CommandText = sqlBuild;
 

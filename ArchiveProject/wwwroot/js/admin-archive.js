@@ -1,7 +1,7 @@
 ﻿function addArchive(btn) {
     var row = $(btn).parent().parent();
     var inputField = $(row).find('.archive-name')[0];
-    $.get('../../InsertArchive/' + btn.dataset.id + "?name=" + inputField.value);
+    $.get('Admin/InsertArchive/' + btn.dataset.id + "?name=" + inputField.value);
     inputField.setAttribute("disabled", "true");
 
     //Get all buttons
@@ -38,7 +38,7 @@ function saveArchive(btn) {
     var id = $(btn)[0].dataset.id;
     var inputField = $(btn).parent().parent().find(".archive-name")[0];
     inputField.setAttribute("disabled", "true");
-    $.get('../../RenameArchive/' + inputField.dataset.id + '?name=' + inputField.value);
+    $.get('Admin/RenameArchive/' + inputField.dataset.id + '?name=' + inputField.value);
 
     $(btn)[0].value = "Edit";
     $(btn).bind('click', function (e) {
@@ -49,7 +49,7 @@ function saveArchive(btn) {
 
 function deleteArchive(btn) {
     if (confirm('Are you sure?')) {
-        $.get('../../DeleteArchive/' + $(btn)[0].dataset.id)
+        $.get('Admin/DeleteArchive/' + $(btn)[0].dataset.id)
             .done(function () {
                 $(btn).parents("tr").remove();
             });
@@ -77,53 +77,51 @@ $(document).ready(function () {
     $(".add-archive").click(function (e) {
         e.preventDefault();
         // Get generated hash
-        var hash;
-        $.get('../../GetHash', {}, function (data) {
-            hash = data;
+        var btn = $(this);
+        $.get('Admin/GetHash', {}, function (data) {
+            // Find correct row
+            var add = $(btn).parent().parent();
+            var rows = add.siblings();
+            var last = $(rows[rows.length - 1]);
+            var tobe = $(last).clone();
+
+            // Set Id
+            var id_field = $(tobe).find('.archive-id');
+            id_field[0].innerText = data;
+
+            // Fix input Field
+            var fields = $(tobe).find('input');
+            fields[0].value = "";
+            fields[0].removeAttribute("disabled");
+            fields[0].setAttribute("name", data);
+            fields[0].dataset.id = data;
+
+            // Save button
+            fields[1].value = "Add";
+            fields[1].dataset.id = data;
+            $(fields[1]).bind('click', function (e) {
+                e.preventDefault();
+                addArchive(this);
+            });
+
+            // Columns button
+            fields[2].value = "Columns";
+            fields[2].dataset.id = data;
+            fields[2].setAttribute('disabled', 'true');
+            $(fields[2]).bind('click', function (e) {
+                e.preventDefault();
+                //?
+            });
+
+            // Cancel button
+            fields[3].value = "Cancel";
+            fields[3].dataset.id = data;
+            $(fields[3]).bind('click', function (e) {
+                e.preventDefault();
+                cancel(this);
+            });
+
+            $(last).after(tobe);
         });
-
-        // Find correct row
-        var add = $(this).parent().parent();
-        var rows = add.siblings();
-        var last = $(rows[rows.length - 1]);
-        var tobe = $(last).clone();
-
-        // Set Id
-        var id_field = $(tobe).find('.archive-id');
-        id_field[0].value = hash;
-
-        // Fix input Field
-        var fields = $(tobe).find('input');
-        fields[0].value = "";
-        fields[0].removeAttribute("disabled");
-        fields[0].setAttribute("name", hash);
-        fields[0].dataset.id = hash;
-
-        // Save button
-        fields[1].value = "Add";
-        fields[1].dataset.id = hash;
-        $(fields[1]).bind('click', function (e) {
-            e.preventDefault();
-            addArchive(this);
-        });
-
-        // Columns button
-        fields[2].value = "Columns";
-        fields[2].dataset.id = hash;
-        fields[2].setAttribute('disabled', 'true');
-        $(fields[2]).bind('click', function (e) {
-            e.preventDefault();
-            //?
-        });
-
-        // Cancel button
-        fields[3].value = "Cancel";
-        fields[3].dataset.id = hash;
-        $(fields[3]).bind('click', function (e) {
-            e.preventDefault();
-            cancel(this);
-        });
-
-        $(last).after(tobe);
     });
 });
