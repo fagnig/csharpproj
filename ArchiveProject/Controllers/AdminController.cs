@@ -77,9 +77,9 @@ namespace ArchiveProject.Controllers
             adm.DropPermission(id);
         }
 
-        public JsonResult GetColumns(string id)
+        public string GetColumns(string id)
         {
-            
+            return JsonConvert.SerializeObject(adm.GetColumns(id));
         }
     }
 }
