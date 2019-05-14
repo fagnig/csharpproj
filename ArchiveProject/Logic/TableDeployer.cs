@@ -116,11 +116,11 @@ namespace ArchiveProject.Logic
 
             try
             {
-                dc.CommandText = "SELECT COUNT(*) FROM ArchivePermissions WHERE id = 0";
+                dc.CommandText = "SELECT COUNT(*) FROM ArchivePermissions WHERE id = '0'";
 
                 if ((Int32)dc.ExecuteScalar() == 0)
                 {
-                    dc.CommandText = "INSERT INTO ArchivePermissions VALUES ('Admin');";
+                    dc.CommandText = "INSERT INTO ArchivePermissions VALUES ('0', 'Admin');";
                     dc.ExecuteNonQuery();
                 }
             }

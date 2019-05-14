@@ -32,7 +32,7 @@ namespace ArchiveProject.Controllers
             // Get Model
             AdminViewModel avm = new AdminViewModel();
             AdminPopulator ap = new AdminPopulator(dbContext);
-            avm.permissions = ap.getAllPermissions();
+            avm.permissions = uv.getAllPermissions();
             avm.users = ap.getAllUsers();
             avm.table = uv.getUserTableList(key);
             return View(avm);

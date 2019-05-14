@@ -186,7 +186,7 @@ namespace ArchiveProject.Logic
             while (dr.Read())
             {
                 List<Object> tmpSubList = new List<Object>();
-                tmpSubList.Add(dr.GetInt32(0));
+                tmpSubList.Add(dr.GetString(0));
                 tmpSubList.Add(dr.GetString(1));
                 tmpList.Add(tmpSubList);
             }

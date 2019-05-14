@@ -20,32 +20,6 @@ namespace ArchiveProject.Logic
 
         }
 
-        public List<List<Object>> getAllPermissions()
-        {
-
-            dbContext.sqlCon.Open();
-
-            DbCommand dc = dbContext.sqlCon.CreateCommand();
-
-            dc.CommandText = "SELECT * FROM ArchivePermissions";
-
-            DbDataReader dr = dc.ExecuteReader();
-
-            List<List<Object>> tmpList = new List<List<Object>>();
-
-            while (dr.Read())
-            {
-                List<Object> tmpSubList = new List<Object>();
-                tmpSubList.Add(dr.GetInt32(0));
-                tmpSubList.Add(dr.GetString(1));
-                tmpList.Add(tmpSubList);
-            }
-
-            dbContext.sqlCon.Close();
-
-            return tmpList;
-        }
-
         public List<List<Object>> getAllUsers()
         {
 
