@@ -48,7 +48,14 @@ namespace ArchiveProject.Data
         {
             Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss"), 0x10, 0x3e8);
             byte[] dst = new byte[0x31];
-            return Convert.ToBase64String(bytes.GetBytes(0x20));
+
+            string tmp = Convert.ToBase64String(bytes.GetBytes(0x20));
+
+            tmp.Replace('+','a');
+            tmp.Replace('=', 'a');
+            tmp.Replace('/', 'a');
+
+            return tmp;
         }
 
         public void ExecNonQuery(string sqlString)
