@@ -12,7 +12,7 @@ namespace ArchiveProject.Logic
 {
     public class TableDeployer
     {
-        Dictionary<string, string> typeMap;
+        public Dictionary<string, string> typeMap;
 
         private readonly ApplicationDbContext dbContext;
 
@@ -20,27 +20,46 @@ namespace ArchiveProject.Logic
         {
             dbContext = context;
 
-            typeMap = new Dictionary<string, string>();
+            typeMap = new Dictionary<string, string>
+            {
+                ["String"] = "nvarchar(256)",
+                ["Boolean"] = "bit",
+                ["Integer"] = "int",
+                ["Date"] = "date"
+            };
 
-            
-            typeMap["String"] = "nvarchar(256)";
-            typeMap["Boolean"] = "bit";
-            typeMap["Integer"] = "int";
-            typeMap["Date"] = "date";
-            
         }
 
-        public int CreateTable(List<KeyValuePair<string,string>> schema, string name)
+        public int CreateTable(string name, string hash)
+        {
+
+            string sql = "CREATE TABLE tb_" + hash + "( id int NOT NULL IDENTITY(1,1) PRIMARY KEY);";
+
+            dbContext.sqlCon.Open();
+
+            DbCommand dc = dbContext.sqlCon.CreateCommand();
+            dc.CommandText = sql;
+            dc.ExecuteNonQuery();
+
+            dbContext.sqlCon.Close();
+
+            MapTable(hash, name);
+
+            return 0;
+        }
+
+        public int CreateTable(List<KeyValuePair<string,string>> schema, string name, string hash)
         {  
             if(schema.Count() == 0)
             {
                 return -1;
             }
 
-            uint tmp = (uint) name.GetHashCode();
+            uint tmp = (uint) DateTime.Now.ToString("dd/MM/yyyy - hh:mm:ss").GetHashCode();
+
             string hashedname = tmp.ToString();
 
-            string sql = "CREATE TABLE tb_" + hashedname + "( id int NOT NULL IDENTITY(1,1) PRIMARY KEY, ";
+            string sql = "CREATE TABLE tb_" + hash + "( id int NOT NULL IDENTITY(1,1) PRIMARY KEY, ";
 
             for(int i = 0; i< schema.Count(); i++)
             {
@@ -61,7 +80,7 @@ namespace ArchiveProject.Logic
 
             dbContext.sqlCon.Close();
 
-            MapTable(hashedname,name);
+            MapTable(hash,name);
 
             return 0;
         }
