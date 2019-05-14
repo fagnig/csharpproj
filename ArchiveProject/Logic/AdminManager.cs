@@ -51,10 +51,8 @@ namespace ArchiveProject.Logic
         //ARCHIVE
         ////////////////////
 
-        public void CreateArchive(string name)
+        public void CreateArchive(string hash, string name)
         {
-            string hash = dbContext.GetHash();
-
             List<string> permSql = new List<string>
             {
                 $"CREATE TABLE [tb_{hash}] ( id int NOT NULL IDENTITY(1,1) PRIMARY KEY);",//Create new table
@@ -62,6 +60,13 @@ namespace ArchiveProject.Logic
             };
 
             dbContext.ExecTrans(permSql);
+        }
+
+        public void CreateArchive(string name)
+        {
+            string hash = dbContext.GetHash();
+
+            CreateArchive(hash, name);
         }
 
         public void DropArchive(string tableHash)
