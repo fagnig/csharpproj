@@ -154,5 +154,36 @@ namespace ArchiveProject.Logic
 
             return tmpList;
         }
+
+        public void AddCol(string tableHash, string colName, string colType)
+        {
+            if (!dbContext.typeMap.ContainsKey(colType)) { return; }
+
+            dbContext.ExecNonQuery($"ALTER TABLE [tb_{tableHash}] ADD COLUMN [{colName}] [{dbContext.typeMap[colType]}]");
+        }
+
+        public void RemoveCol(string colName, string tableHash)
+        {
+            dbContext.ExecNonQuery($"ALTER TABLE [tb_{tableHash}] DROP COLUMN [{colName}];");
+        }
+
+        public void AssignPerm(string userHash, string perm)
+        {
+            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchiveUserPermMapping] VALUES ('{userHash}', '{perm}');");
+        }
+        public void RemovePerm(string userHash, int perm)
+        {      
+            dbContext.ExecNonQuery($"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm=['{perm}'], id_user = ['{userHash}']);");
+        }
+
+        public void AssignTable(string tableHash, string perm)
+        {
+            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchivePermMapping] VALUES (['{perm}'], ['{tableHash}']);");
+        }
+
+        public void RemoveTable(string tableHash, string perm)
+        {
+            dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_role=['{perm}'], id_table = ['{tableHash}']);");
+        }
     }
 }
