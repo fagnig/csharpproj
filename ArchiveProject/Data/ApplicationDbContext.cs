@@ -23,7 +23,7 @@ namespace ArchiveProject.Data
             {
                 ["String"] = "nvarchar(256)",
                 ["Boolean"] = "bit",
-                ["Integer"] = "int",
+                ["Int32"] = "int",
                 ["Date"] = "date"
             };
 

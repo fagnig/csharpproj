@@ -94,5 +94,10 @@ namespace ArchiveProject.Controllers
         {
             new PermissionsManager(dbContext).deletePermission(id);
         }
+
+        public JsonResult GetColumns(string id)
+        {
+            
+        }
     }
 }

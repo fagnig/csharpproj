@@ -185,5 +185,28 @@ namespace ArchiveProject.Logic
         {
             dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_role=['{perm}'], id_table = ['{tableHash}']);");
         }
+
+        public List<List<Object>> GetColumns(string tableHash)
+        {
+            DbDataReader dr = dbContext.ExecReader($"SELECT * FROM tb_{tableHash} WHERE 1=2");
+
+            dr.Read();
+
+            int tmp = dr.FieldCount;
+
+            List<List<Object>> tmpList = new List<List<Object>>();
+
+            for(int i = 0; i<tmp; i++)
+            {
+                List<Object> tmpSubList = new List<Object>();
+                tmpSubList.Add(dr.GetName(i));
+                tmpSubList.Add(dr.GetFieldType(i));
+                tmpList.Add(tmpSubList);
+            }
+
+            dr.Close();
+
+            return tmpList;
+        }
     }
 }
