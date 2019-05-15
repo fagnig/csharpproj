@@ -93,7 +93,7 @@ namespace ArchiveProject.Logic
             catch (SqlException) { dbContext.TryCloseConnection(); }
 
             try {
-                dbContext.ExecNonQuery("CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_perm int);");
+                dbContext.ExecNonQuery("CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_perm nvarchar(256));");
             }
             catch (SqlException) { dbContext.TryCloseConnection(); }
 

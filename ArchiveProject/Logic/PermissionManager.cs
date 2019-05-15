@@ -18,32 +18,32 @@ namespace ArchiveProject.Logic
 
         }
 
-        public List<int> GetTableRoles(string tableHash)
+        public List<string> GetTableRoles(string tableHash)
         {
             
             DbDataReader dr = dbContext.ExecReader($"SELECT * FROM ArchivePermMapping WHERE id_table = '{tableHash}'");
 
-            List<int> tmpList = new List<int>();
+            List<string> tmpList = new List<string>();
 
             while (dr.Read())
             {
-                tmpList.Add((int)dr.GetValue(0));
+                tmpList.Add((string)dr.GetValue(0));
             }
 
             dr.Close();
 
             return tmpList;
         }
-        public List<int> GetUserRoles(string userHash)
+        public List<string> GetUserRoles(string userHash)
         {
 
             DbDataReader dr = dbContext.ExecReader($"SELECT * FROM ArchiveUserPermMapping WHERE id_user = '{userHash}'");
 
-            List<int> tmpList = new List<int>();
+            List<string> tmpList = new List<string>();
 
             while (dr.Read())
             {
-                tmpList.Add((int)dr.GetValue(1));
+                tmpList.Add((string)dr.GetValue(1));
             }
 
             dr.Close();
@@ -53,9 +53,9 @@ namespace ArchiveProject.Logic
 
         public bool IsUserAdmin(string userHash)
         {
-            List<int> userRoles = GetUserRoles(userHash);
+            List<string> userRoles = GetUserRoles(userHash);
 
-            return userRoles.Contains(0);
+            return userRoles.Contains("0");
         }
         public bool CanUserAccess(string userHash, string tableHash)
         {
@@ -64,10 +64,10 @@ namespace ArchiveProject.Logic
                 return true;
             }
 
-            List<int> userRoles = GetUserRoles(userHash);
-            List<int> tableRoles = GetTableRoles(tableHash);
+            List<string> userRoles = GetUserRoles(userHash);
+            List<string> tableRoles = GetTableRoles(tableHash);
 
-            foreach (int role in userRoles)
+            foreach (string role in userRoles)
             {
                 if (tableRoles.Contains(role)) { return true; }
             }

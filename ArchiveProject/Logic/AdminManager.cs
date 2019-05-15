@@ -174,21 +174,21 @@ namespace ArchiveProject.Logic
 
         public void AssignPerm(string userHash, string perm)
         {
-            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchiveUserPermMapping] VALUES ('{userHash}', '{perm}');");
+            dbContext.ExecNonQuery($"INSERT INTO [ArchiveUserPermMapping] VALUES ('{userHash}', '{perm}');");
         }
-        public void RemovePerm(string userHash, int perm)
+        public void RemovePerm(string userHash, string perm)
         {      
-            dbContext.ExecNonQuery($"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm='{perm}', id_user = '{userHash}');");
+            dbContext.ExecNonQuery($"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm='{perm}' AND id_user = '{userHash}';");
         }
 
         public void AssignTable(string tableHash, string perm)
         {
-            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchivePermMapping] VALUES ('{perm}', '{tableHash}');");
+            dbContext.ExecNonQuery($"INSERT INTO [ArchivePermMapping] VALUES ('{perm}', '{tableHash}');");
         }
 
         public void RemoveTable(string tableHash, string perm)
         {
-            dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_role='{perm}', id_table = '{tableHash}');");
+            dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_perm='{perm}' AND id_table = '{tableHash}';");
         }
 
         public List<List<Object>> GetColumns(string tableHash)
