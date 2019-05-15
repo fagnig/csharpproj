@@ -53,7 +53,12 @@ namespace ArchiveProject.Controllers
 
         public void AddColToArchive(string id, string colName, string colType)
         {
-            //adm.AddCol(id, colName, colType);
+            adm.AddCol(id, colName, colType);
+        }
+
+        public void RemoveColFromArchive(string id, string colName)
+        {
+            adm.RemoveCol(colName, id);
         }
 
         public void DeleteArchive(string id)
