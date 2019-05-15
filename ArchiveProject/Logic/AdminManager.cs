@@ -260,7 +260,7 @@ namespace ArchiveProject.Logic
 
             DbDataReader dr = dbContext.ExecReader("SELECT * FROM ArchivePermissions");
 
-            List<List<Object>> listArchive = new List<List<object>>();
+            List<List<Object>> listPerms = new List<List<object>>();
 
             while (dr.Read())
             {
@@ -270,21 +270,21 @@ namespace ArchiveProject.Logic
                     dr.GetValue(1)
                 };
 
-                listArchive.Add(tmpSubList);
+                listPerms.Add(tmpSubList);
             }
 
             dr.Close();
 
 
 
-            foreach (List<Object> archive in listArchive)
+            foreach (List<Object> perm in listPerms)
             {
-                int ret = (int)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchiveUserPermMapping WHERE id_user = '{userHash}' AND id_perm = '{archive[1]}'");
+                int ret = (int)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchiveUserPermMapping WHERE id_user = '{userHash}' AND id_perm = '{perm[0]}'");
 
                 List<Object> permMapping = new List<Object>
                 {
-                    archive[0],
-                    archive[1],
+                    perm[0],
+                    perm[1],
                     ret > 0
                 };
 
