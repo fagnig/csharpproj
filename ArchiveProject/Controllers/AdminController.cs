@@ -110,8 +110,8 @@ namespace ArchiveProject.Controllers
 
         public void SetUserMapping(string id, string idPerm, bool assign)
         {
-            if (assign) { adm.AssignPerm(idPerm, id); }
-            else { adm.RemovePerm(idPerm, id); }
+            if (assign) { adm.AssignPerm(id, idPerm); }
+            else { adm.RemovePerm(id, idPerm); }
         }
     }
 }
