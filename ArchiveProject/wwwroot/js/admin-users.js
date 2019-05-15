@@ -17,7 +17,6 @@ function buildUserModal(btn) {
     $.get('Admin/GetUserMapping/' + id, {}, function (data) {
         var json = JSON.parse(data);
         $.each(json, function (index, value) {
-            alert(JSON.stringify(value));
             modalBody.append(buildUserAssignRow(id, value[0], value[1], value[2]));
             var rows = $(modalBody).find('tr');
             var last = $(rows[rows.length - 1]);

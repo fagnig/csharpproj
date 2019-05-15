@@ -1,4 +1,11 @@
-﻿function editRow(btn) {
+﻿var map = {
+    "Int32": "number",
+    "Boolean": "checkbox",
+    "DateTime": "date",
+    "String": "text"
+};
+
+function editRow(btn) {
     var id = $(btn)[0].dataset.id;
     var fields = document.getElementsByName(id);
     for (i = 0; i < fields.length; i++) { fields[i].removeAttribute("disabled"); }
@@ -64,38 +71,6 @@ function addRow(btn) {
     });
 };
 
-function copyRow(btn) {
-    // Get rows
-    var add = $(btn).parent().parent();
-    var rows = add.siblings();
-    var last = $(rows[rows.length - 1]);
-    var tobe = $(last).clone();
-
-    // Get inputs
-    var fields = $(tobe).find('input');
-    fields[0].value = "Save";
-    $(fields[0]).unbind().bind('click', function (e) {
-        e.preventDefault();
-        addRow(this);
-    });
-    fields[1].value = "Cancel";
-    $(fields[1]).unbind().bind('click', function (e) {
-        e.preventDefault();
-        cancel(this);
-    });
-
-    // Clear inputs
-    var i;
-    for (i = 2; i < fields.length; i++) {
-        fields[i].value = "";
-        fields[i].removeAttribute("disabled");
-        fields[i].removeAttribute("name");
-    }
-
-    // Insert row
-    $(last).after(tobe);
-}
-
 function deleteRow(btn) {
     if (confirm('Are you sure?')) {
         $.get('../../DeleteDbRow/' + $(btn)[0].dataset.id + '?' + 'table=' + $(btn)[0].dataset.table)
@@ -105,32 +80,81 @@ function deleteRow(btn) {
     }
 };
 
-function cancel(btn) {
-    if (confirm('Are you sure?')) {
-        $(btn).parents("tr").remove();
+function buildTableTR(tableHash, rowData, newRow) {
+    var row = '<tr>';
+    var disabled;
+    if (newRow) {
+        disabled = "";
+        row += '<td><input type="button" class="btn btn-default save-row" data-id="' + rowData[0][0] + '" data-table="' + tableHash + '" value="Save" /></td>';
     }
+    else {
+        disabled = "disabled";
+        row += '<td><input type="button" class="btn btn-default edit-row" data-id="' + rowData[0][0] + '" data-table="' + tableHash + '" value="Edit" /></td>';
+    }
+    row += '<td><input type="button" class="btn btn-default delete-row" data-id="' + rowData[0][0] + '" data-table="' + tableHash + '" value="Delete" /></td>';
+
+    for (j = 1; j < tableData[i].length; j++) {
+        var type = map[rowData[i][2]];
+        row += '<input class="input-sm field-value" type="' + type + '" value="' + rowData[i][0] + '" name="' + rowData[0][0] + '" data-id="' + rowData[0][0] + '" data-column="' + rowData[i][1] + '" data-table="' + tableHash + '" ' + disabled + ' />';
+    }
+    row += '</tr>';
+    return row;
+}
+
+function buildTableHead(tableData) {
+    var head = "";
+    var i;
+    head += '<tr><th></th><th></th>';
+    for (i = 1; i < tableData[0].length; i++) {
+        head += '<th>' + tableData[0][i][1] + '</th>';
+    }
+    head += '</tr>';
+    return head;  
+}
+
+function buildTableBody(tableHash, tableData) {
+    var body = "";
+    var i;
+    for (i = 0; i < tableData.length; i++) {
+        body += buildTableTR(tableHash, tableData[i], false);
+    }  
+    return body;  
+}
+
+function buildTable(id) {
+    $('.add-row')[0].dataset.id = id;
+    var head = $('.table-data-head');
+    var body = $('.table-data-body');
+    $.get('Admin/GetColumns/' + id, {}, function (data) {
+        var json = JSON.parse(data);
+        head.append(buildTableHead(json));
+        body.append(buildTableBody(id, json));
+        $('.save-row').unbind().bind('click', function (e) {
+            e.preventDefault();
+            saveRow(this);
+        });
+        $('.edit-row').unbind().bind('click', function (e) {
+            e.preventDefault();
+            editRow(this);
+        });
+        $('.delete-row').unbind().bind('click', function (e) {
+            e.preventDefault();
+            deleteRow(this);
+        });
+    });
+}
+
+function cleanTable() {
+    $('.table-data-head').children('tr').each(function (e) { $(this).remove(); });
+    $('.table-data-body').children('tr').each(function (e) { $(this).remove(); });
 }
 
 $(document).ready(function () {
     $('#archive_selector').unbind().bind('change', function (e) {
         e.preventDefault();
-        var selectedCountry = $(this).children("option:selected").val();
-        window.location = '/Archive/Index/' + selectedCountry + '/';
-    });
-
-    $('.edit-row').unbind().bind('click', function (e) {
-        e.preventDefault();
-        editRow(this);
-    });
-
-    $(".delete-row").unbind().bind('click', function (e) {
-        e.preventDefault();
-        deleteRow(this);
-    });
-
-    $(".add-row").unbind().bind('click', function (e) {
-        e.preventDefault();
-        copyRow(this);
+        var selectedArchive = $(this).children("option:selected").val();
+        cleanTable();
+        buildTable(selectedArchive);
     });
 });
 

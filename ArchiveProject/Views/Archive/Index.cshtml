@@ -32,7 +32,7 @@
     </div>
     <div style="width:100%; overflow-x:auto;">
         <table id="table_data" class="table table-hover">
-            <thead>
+            <thead class="table-data-head">
                 <tr>
                     <th colspan="2">Actions</th>
                     @for (int i = 1; i < Model.typelist.Count; i++)
@@ -40,7 +40,7 @@
                         <th>@Model.typelist[i].Key</th>}
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-data-body">
                 @foreach (List<Object> rows in Model.values)
                 {
                     <tr>
@@ -79,6 +79,14 @@
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align:center;padding-left:10px;">
+                        <input type="button" class="btn btn-default add-row" value="Add Row" />
+                    </td>
+                    <td class="table-foot-line" colspan="@(Model.values[0].Count)"></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
