@@ -92,9 +92,26 @@ namespace ArchiveProject.Controllers
             return JsonConvert.SerializeObject(adm.GetColumns(id));
         }
 
-        public string GetPermissions(string id)
+        public string GetPermissionMapping(string id)
         {
-            return JsonConvert.SerializeObject(adm.GetPermissions());
+            return JsonConvert.SerializeObject(adm.GetPermissionMapping(id));
+        }
+
+        public void SetPermissionMapping(string id, string idArchive, bool assign)
+        {
+            if(assign) { adm.AssignTable(idArchive, id); }
+            else { adm.RemoveTable(idArchive, id); }
+        }
+
+        public string GetUserMapping(string id)
+        {
+            return JsonConvert.SerializeObject(adm.GetUserMapping(id));
+        }
+
+        public void SetUserMapping(string id, string idPerm, bool assign)
+        {
+            if (assign) { adm.AssignPerm(idPerm, id); }
+            else { adm.RemovePerm(idPerm, id); }
         }
     }
 }

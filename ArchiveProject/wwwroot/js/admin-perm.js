@@ -47,36 +47,46 @@ function addPerm(btn) {
     });
 };
 
-function buildPermAssignRow(id,name,assigned) {
+function buildPermAssignRow(idPerm,idArchive,name,assigned) {
     var row = '<tr>';
     row += '<td style="vertical-align:middle; width:80%;">';
-    row += '<div class="id-perm">' + name + '</div>';
+    row += '<div>' + name + '</div>';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:20%;">';
-    if (assigned) { row += '<input type="checkbox" style="width:100%" class="btn btn-default assign-perm-row" data-id="' + id + '" checked>' }
-    else { row += '<input type="checkbox" style="width:100%" class="btn btn-default assign-perm-row" data-id="' + id + '">' }
+    if (assigned) { row += '<input type="checkbox" class="assign-perm-row" data-id-perm="' + idPerm + '" data-id-archive="'+idArchive+'" checked>' }
+    else { row += '<input type="checkbox" class="assign-perm-row" data-id-perm="' + idPerm + '" data-id-archive="' + idArchive +'">' }
     row += '</td>';
     row += '</tr>';
     return row;
 }
 
-function buildArchiveModal(btn) {
+function buildPermModal(btn) {
     var id = $(btn)[0].dataset.id;
     var modalBody = $('.perm-modal-body');
-    $.get('Admin/GetColumns/' + id, {}, function (data) {
+    $.get('Admin/GetPermissionMapping/' + id, {}, function (data) {
         var json = JSON.parse(data);
         $.each(json, function (index, value) {
-            modalBody.append(buildModalRow(id, 'delete'));
+            modalBody.append(buildPermAssignRow(id,value[0],value[1],value[2]));
             var rows = $(modalBody).find('tr');
             var last = $(rows[rows.length - 1]);
-            last.find(".name-archive-column-row").val(value[0]);
-            last.find(".type-archive-column-row").append('<option value="' + value[1] + '" selected = "selected">' + map[value[1]] + '</option>');
-            last.find(".delete-archive-column-row").bind('click', function (e) {
+            last.find(".assign-perm-row").bind('change', function (e) {
                 e.preventDefault();
-                deleteColumn(this);
+                registerPermAssign(this);
             });
         });
     });
+}
+
+function registerPermAssign(btn) {
+    var checkbox = $(btn);
+    var idPerm = checkbox[0].dataset.idPerm;
+    var idArchive = checkbox[0].dataset.idArchive;
+    var assign = checkbox.is(":checked");
+    $.get('Admin/SetPermissionMapping/' + idPerm + '?idArchive=' + idArchive + '&assign=' + assign);
+}
+
+function closePermModal() {
+    $('.perm-modal-body').children('tr').each(function (e) { $(this).remove(); });
 }
 
 function appendPerm(data) {
@@ -115,7 +125,7 @@ function appendPerm(data) {
         addPerm(this);
     });
 
-    // Columns button
+    // Assign button
     fields[2].value = "Assign";
     fields[2].setAttribute('disabled', 'true');
     $(fields[2]).unbind().bind('click', function (e) {
@@ -157,8 +167,18 @@ $(document).ready(function () {
         deletePerm(this);
     });
 
+    $(".assign-perm").unbind().bind('click', function (e) {
+        e.preventDefault();
+        buildPermModal(this);
+    });
+
     $(".add-perm").unbind().bind('click', function (e) {
         e.preventDefault();
         $.get('Admin/GetHash', {}, function (data) { appendPerm(data); });
+    });
+
+    $(".close-perm-modal").unbind().bind('click', function (e) {
+        e.preventDefault();
+        closePermModal();
     });
 });

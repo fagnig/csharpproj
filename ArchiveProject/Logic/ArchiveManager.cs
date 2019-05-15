@@ -90,7 +90,7 @@ namespace ArchiveProject.Logic
         {
             string sqlBuild = $"SELECT * FROM ArchivePermMapping WHERE id_perm IN (";
 
-            List<int> userRoles = pm.GetUserRoles(userHash);
+            List<string> userRoles = pm.GetUserRoles(userHash);
 
             if (userRoles.Count() == 0)
             {
