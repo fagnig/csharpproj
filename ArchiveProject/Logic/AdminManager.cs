@@ -253,5 +253,45 @@ namespace ArchiveProject.Logic
 
             return tmpList;
         }
+
+        public List<List<Object>> GetUserMapping(string userHash)
+        {
+            List<List<Object>> tmpList = new List<List<object>>();
+
+            DbDataReader dr = dbContext.ExecReader("SELECT * FROM ArchivePermissions");
+
+            List<List<Object>> listArchive = new List<List<object>>();
+
+            while (dr.Read())
+            {
+                List<Object> tmpSubList = new List<object>
+                {
+                    dr.GetValue(0),
+                    dr.GetValue(1)
+                };
+
+                listArchive.Add(tmpSubList);
+            }
+
+            dr.Close();
+
+
+
+            foreach (List<Object> archive in listArchive)
+            {
+                int ret = (int)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchiveUserPermMapping WHERE id_user = '{userHash}' AND id_perm = '{archive[1]}'");
+
+                List<Object> permMapping = new List<Object>
+                {
+                    archive[0],
+                    archive[1],
+                    ret > 0
+                };
+
+                tmpList.Add(permMapping);
+            }
+
+            return tmpList;
+        }
     }
 }
