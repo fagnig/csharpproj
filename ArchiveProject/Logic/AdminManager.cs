@@ -109,10 +109,15 @@ namespace ArchiveProject.Logic
 
         public void CreatePermission(string permissionName)
         {
+            CreatePermission(dbContext.GetHash(), permissionName);
 
-            if((Int32)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchivePermissions WHERE name = ['{permissionName}']") == 0)
+        }
+        public void CreatePermission(string hash, string permissionName)
+        {
+
+            if ((Int32)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchivePermissions WHERE name = ['{permissionName}']") == 0)
             {
-                dbContext.ExecNonQuery($"INSERT INTO ArchivePermissions VALUES ( ['{dbContext.GetHash()}'], ['{permissionName}']);");
+                dbContext.ExecNonQuery($"INSERT INTO ArchivePermissions VALUES ( ['{hash}'], ['{permissionName}']);");
             }
 
         }
