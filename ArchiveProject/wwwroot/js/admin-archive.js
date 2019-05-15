@@ -126,10 +126,10 @@ function buildModalRow(id, type) {
     var row = '<tr>';
     if (type == 'add') {
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input style="width:100%" class="input-sm name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '"/>';
+        row += '<input style="width:100%" class="form-control name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '"/>';
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<select style=width:100% class="input-sm type-archive-column-row" data-id="' + id + '" name="' + id + '">'
+        row += '<select style=width:100% class="form-control type-archive-column-row" data-id="' + id + '" name="' + id + '">'
         row += '<option value="String">Text</option><option value="Int32">Number</option><option value="Boolean">True/False</option><option value="Date">Date</option></select>'
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
@@ -137,10 +137,10 @@ function buildModalRow(id, type) {
         row += '</td>';
     } else {
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input style="width:100%" class="input-sm name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '" disabled />';
+        row += '<input style="width:100%" class="form-control name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '" disabled />';
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<select style=width:100% class="input-sm type-archive-column-row" data-id="' + id + '" disabled></select>'
+        row += '<select style=width:100% class="form-control type-archive-column-row" data-id="' + id + '" disabled></select>'
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
         row += '<input type="button" class="btn btn-default delete-archive-column-row" data-id="' + id + '" value="Delete" />';
@@ -156,7 +156,7 @@ function appendArchive(btn, data) {
     row += '<div class="archive-id">' + data + '</div>';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:60%;">';
-    row += '<input style="width:100%" class="input-sm archive-name" type="text" value="" name="' + data + '" data-id="' + data + '" data-column="name" data-table="ArchivePermissions" disabled />';
+    row += '<input style="width:100%" class="form-control archive-name" type="text" value="" name="' + data + '" data-id="' + data + '" data-column="name" data-table="ArchivePermissions" disabled />';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:5%;">';
     row += '<input type="button" class="btn btn-default edit-archive" data-id="' + data + '" value="Edit" />';

@@ -1,5 +1,4 @@
-﻿@model ArchiveViewModel
-<div id="Top" style="margin-top:1em;">
+﻿<div id="Top" style="margin-top:1em;">
     <table style="width:100%;margin-top:1em;">
         <tr>
             <th><h2>Archive Page</h2></th>
@@ -28,65 +27,13 @@
 
 <div id="bottom" style="margin-top:3em;">
     <div id="archive-titel">
-        <h4>@Model.tableTitle</h4>
+        <h4 class="title-archive"></h4>
     </div>
     <div style="width:100%; overflow-x:auto;">
         <table id="table_data" class="table table-hover">
-            <thead class="table-data-head">
-                <tr>
-                    <th colspan="2">Actions</th>
-                    @for (int i = 1; i < Model.typelist.Count; i++)
-                    {
-                        <th>@Model.typelist[i].Key</th>}
-                </tr>
-            </thead>
-            <tbody class="table-data-body">
-                @foreach (List<Object> rows in Model.values)
-                {
-                    <tr>
-                        <td><input type="button" class="btn btn-default edit-row" data-id="@rows[0]" data-table="@Model.tableHash" value="Edit" /></td>
-                        <td><input type="button" class="btn btn-default delete-row" data-id="@rows[0]" data-table="@Model.tableHash" value="Delete" /></td>
-                        @for (int i = 1; i < rows.Count; i++)
-                        {
-                            <td>
-                                @if (Model.typelist[i].Value.Name.Equals("String"))
-                                {
-                                    <input class="input-sm field-value" type="text" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
-                                }
-                                else if (Model.typelist[i].Value.Name.Equals("Boolean"))
-                                {
-                                    <input class="input-sm field-value" type="checkbox" checked="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
-                                }
-                                else if (Model.typelist[i].Value.Name.Equals("Int32"))
-                                {
-                                    <input class="input-sm field-value" type="number" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
-                                }
-                                else if (Model.typelist[i].Value.Name.Equals("Date"))
-                                {
-                                    <input class="input-sm field-value" type="date" value="@rows[i]" name="@rows[0]" data-id="@rows[0]" data-column="@Model.typelist[i].Key" data-table="@Model.tableHash" disabled />
-                                }
-                            </td>
-                        }
-                    </tr>
-                }
-                @if (Model.values.Count > 0 && Model.values[0].Count > 0)
-                {
-                    <tr>
-                        <td colspan="2" style="text-align:center;padding-left:10px;">
-                            <input type="button" class="btn btn-default add-row" value="Add Row" />
-                        </td>
-                        <td colspan="@(Model.values[0].Count)"></td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2" style="text-align:center;padding-left:10px;">
-                        <input type="button" class="btn btn-default add-row" value="Add Row" />
-                    </td>
-                    <td class="table-foot-line" colspan="@(Model.values[0].Count)"></td>
-                </tr>
-            </tfoot>
+            <thead class="table-data-head"></thead>
+            <tbody class="table-data-body"></tbody>
+            <tfoot class="table-data-foot"></tfoot>
         </table>
     </div>
 </div>
