@@ -28,21 +28,23 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="body-perm">
                         @foreach (List<Object> row in Model.permissions)
                         {
                             <tr>
-                                <td style="vertical-align:middle; width:5%;"><div class="id-perm">@row[0]</div></td>
+                                <td style="vertical-align:middle; width:5%;"><div class="perm-id">@row[0]</div></td>
                                 <td style="vertical-align:middle; width:80%;"><input style="width:100%" class="input-sm name-perm" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit-perm" data-id="@row[0]" value="Edit" /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default assign-perm" data-id="@row[0]" value="Assign" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default assign-perm" data-toggle="modal" data-target="#permModal" data-backdrop="static" data-keyboard="false" data-id="@row[0]" value="Assign" /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-perm" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
+                    </tbody>
+                    <tfoot>
                         <tr>
                             <td colspan="5"><input style="width:100%;" class="btn btn-default add-perm" type="button" value="Add Permission" /></td>
                         </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -118,7 +120,7 @@
                                 <td style="vertical-align:middle; width:25%;"><div class="archive-id">@row[0]</div></td>
                                 <td style="vertical-align:middle; width:60%;"><input style="width:100%" class="input-sm archive-name" type="text" value="@row[1]" name="@row[0]" data-id="@row[0]" data-column="name" data-table="ArchivePermissions" disabled /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default edit-archive" data-id="@row[0]" value="Edit" /></td>
-                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default columns-archive" data-toggle="modal" data-target="#archiveModal" data-id="@row[0]" value="Columns" /></td>
+                                <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default columns-archive" data-toggle="modal" data-target="#archiveModal" data-backdrop="static" data-keyboard="false" data-id="@row[0]" value="Columns" /></td>
                                 <td style="vertical-align:middle; width:5%;"><input type="button" class="btn btn-default delete-archive" data-id="@row[0]" value="Delete" /></td>
                             </tr>
                         }
@@ -197,7 +199,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3"><input class="btn btn-default add-archive-column-modal" style="width:100%" /></th>
+                            <th colspan="3"><input class="btn btn-default add-archive-column-modal" style="width:100%" value="Add Column" /></th>
                         </tr>
                     </tfoot>
                 </table>
