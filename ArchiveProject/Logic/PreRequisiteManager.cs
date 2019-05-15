@@ -1,4 +1,6 @@
 ﻿using ArchiveProject.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Protocols;
 using System;
@@ -100,12 +102,22 @@ namespace ArchiveProject.Logic
             return 0;
         }
 
+        public void AddAdminAccount()
+        {
+            var user = new IdentityUser("admin");
+            user.Email = "admin@admin.admin";
+            user.PasswordHash = "admin";
+            dbContext.Users.Add(user);
+            dbContext.SaveChanges();
+            dbContext.ExecNonQuery($"INSERT INTO ArchiveUserPermMapping VALUES ('{user.Id}', '0');");
+        }
+
         public void DeployDefaultData()
         {
             List<KeyValuePair<string, string>> tmpTable = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Name", "String"),
-                new KeyValuePair<string, string>("Phone", "Integer"),
+                new KeyValuePair<string, string>("Phone", "Int32"),
                 new KeyValuePair<string, string>("DateofBirth", "Date"),
                 new KeyValuePair<string, string>("Address", "String")
             };
@@ -113,15 +125,15 @@ namespace ArchiveProject.Logic
             string hash = dbContext.GetHash();
 
             CreateTable(tmpTable, "People",hash);
-            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Jens Jensen',12345678,DATE '2000-03-12','Jenisgade');");
-            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Bent Bentsen',23456789,DATE '2001-05-20','Fenisgade');");
-            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Ib Ibsen',34567890,DATE '2002-08-23','Tenisgade');");
-            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Karl Karlsen',45678901,DATE '2003-02-17','Klenisgade');");
+            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Jens Jensen',12345678,'2000-03-12','Jenisgade');");
+            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Bent Bentsen',23456789,'2001-05-20','Fenisgade');");
+            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Ib Ibsen',34567890,'2002-08-23','Tenisgade');");
+            dbContext.ExecNonQuery($"INSERT INTO tb_{hash}(Name,Phone,DateofBirth,Address) VALUES('Karl Karlsen',45678901,'2003-02-17','Klenisgade');");
 
             tmpTable = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("KeyName", "String"),
-                new KeyValuePair<string, string>("KeyId", "Integer")
+                new KeyValuePair<string, string>("KeyId", "Int32")
             };
 
             hash = dbContext.GetHash();

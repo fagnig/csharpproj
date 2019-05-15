@@ -95,7 +95,7 @@ function appendPerm(data) {
     row += '<div class="id-perm">' + data + '</div>';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:60%;">';
-    row += '<input style="width:100%" class="input-sm name-perm" type="text" value="" name="' + data + '" data-id="' + data + '" data-column="name" data-table="ArchivePermissions" disabled />';
+    row += '<input style="width:100%" class="form-control name-perm" type="text" value="" name="' + data + '" data-id="' + data + '" data-column="name" data-table="ArchivePermissions" disabled />';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:5%;">';
     row += '<input type="button" class="btn btn-default edit-perm" data-id="' + data + '" value="Edit" />';

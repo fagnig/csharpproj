@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using ArchiveProject.Logic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,8 @@ namespace ArchiveProject.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbConnection sqlCon;
-
         public Dictionary<string, string> typeMap;
+        private string adminKey;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -29,9 +30,18 @@ namespace ArchiveProject.Data
             };
 
             sqlCon = this.Database.GetDbConnection();
+            runPreReq();
         }
 
 
+        private void runPreReq()
+        {
+            PreRequisiteManager prm = new PreRequisiteManager(this);
+            prm.DeployRequiredTables();
+            //prm.AddAdminAccount();
+
+            prm.DeployDefaultData();
+        }
 
         public void DropTable(string tableToDrop)
         {
