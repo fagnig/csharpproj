@@ -200,7 +200,7 @@ namespace ArchiveProject.Logic
             {
                 List<Object> tmpSubList = new List<Object>();
                 tmpSubList.Add(dr.GetName(i));
-                tmpSubList.Add(dr.GetFieldType(i));
+                tmpSubList.Add(dr.GetFieldType(i).Name);
                 tmpList.Add(tmpSubList);
             }
 

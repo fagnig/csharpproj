@@ -1,4 +1,11 @@
-﻿function addArchive(btn) {
+﻿var map = {
+    "Int32": "Number",
+    "Boolean": "True/False",
+    "DateTime": "Date",
+    "String": "Text"
+};
+
+function addArchive(btn) {
     var row = $(btn).parent().parent();
     var inputField = $(row).find('.archive-name')[0];
     $.get('Admin/InsertArchive/' + btn.dataset.id + "?name=" + inputField.value);
@@ -47,35 +54,66 @@ function saveArchive(btn) {
     });
 };
 
-function buildArchiveModal(btn) {
+function addArchiveModalRow(btn) {
     var id = $(btn)[0].dataset.id;
     var modalBody = $('.archive-modal-body');
+    modalBody.append(buildModalRow(id, 'add'));
+    var rows = $(modalBody).find('tr');
+    var last = $(rows[rows.length - 1]);
+    last.find("add-archive-column-row").bind('click', function (e) {
+        e.preventDefault();
+        addColumn(this);
+    });
+}
 
-    modalBody.append(row);
+function addColumn(btn) {
+    var row = $(btn).parent().parent();
+    var namefield = row.find("name-archive-column-row")[0];
+    var typefield = row.find("type-archive-column-row")[0];
+    $.get('Admin/GetColumns/' + id).done(function () {
+
+    });
+}
+
+function buildArchiveModal(btn) {
+    var id = $(btn)[0].dataset.id;
+    $('.add-archive-column-modal')[0].dataset.id = id;
+    var modalBody = $('.archive-modal-body');
+    $.get('Admin/GetColumns/' + id, {}, function (data) {
+        var json = JSON.parse(data);
+        alert(data);
+        $.each(json, function (index, value) {
+            modalBody.append(buildModalRow(id, 'delete'));
+            var rows = $(modalBody).find('tr');
+            var last = $(rows[rows.length - 1]);
+            last.find(".name-archive-column-row")[0].value = value[0];
+            $(last.find(".type-archive-column-row")[0]).append('<option value="'+value[1]+'" selected = "selected">' + map[value[1]] + '</option>');
+        });
+    });
 }
 
 function buildModalRow(id, type) {
     var row = '<tr>';
     if (type == 'add') {
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input style="width:100%" class="input-sm name-modal" type="text" value="" name="' + id + '" data-id="' + id + '"/>';
+        row += '<input style="width:100%" class="input-sm name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '"/>';
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<select style=width:100% class="input-sm type-modal" data-id="' + id + '" name="' + id + '">'
+        row += '<select style=width:100% class="input-sm type-archive-column-row" data-id="' + id + '" name="' + id + '">'
         row += '<option value="String">Text</option><option value="Int32">Number</option><option value="Boolean">True/False</option><option value="Date">Date</option></select>'
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input type="button" class="btn btn-default add-modal" data-id="' + id + '" value="Add" />';
+        row += '<input type="button" class="btn btn-default add-archive-column-row" data-id="' + id + '" value="Add" />';
         row += '</td>';
     } else {
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input style="width:100%" class="input-sm name-modal" type="text" value="" name="' + id + '" data-id="' + id + '" disabled />';
+        row += '<input style="width:100%" class="input-sm name-archive-column-row" type="text" value="" name="' + id + '" data-id="' + id + '" disabled />';
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<select style=width:100% class="input-sm type-modal" data-id="' + id + '" disabled></select>'
+        row += '<select style=width:100% class="input-sm type-archive-column-row" data-id="' + id + '" disabled></select>'
         row += '</td>';
         row += '<td style="vertical-align:middle; width:33%;">';
-        row += '<input type="button" class="btn btn-default delete-modal" data-id="' + id + '" value="Delete" />';
+        row += '<input type="button" class="btn btn-default delete-archive-column-row" data-id="' + id + '" value="Delete" />';
         row += '</td>';
     }
     row += '</tr>';
@@ -170,5 +208,10 @@ $(document).ready(function () {
         e.preventDefault();
         var btn = $(this);
         $.get('Admin/GetHash', {}, function (data) { appendArchive(btn, data); });
+    });
+
+    $(".add-archive-column-modal").unbind().bind('click', function (e) {
+        e.preventDefault();
+        addArchiveModalRow(this);
     });
 });
