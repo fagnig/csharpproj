@@ -39,7 +39,7 @@ namespace ArchiveProject
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("localDb")));
+                    Configuration.GetConnectionString("azureDb")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
