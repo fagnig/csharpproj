@@ -30,8 +30,8 @@ namespace ArchiveProject.Controllers
         public IActionResult Index(string id)
         {
             // Check required tables
-            TableDeployer td = new TableDeployer(dbContext);
-            td.deployRequiredTables();
+            PreRequisiteManager prm = new PreRequisiteManager(dbContext);
+            //prm.DeployRequiredTables();
 
             // Get user identifier
             var key = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;

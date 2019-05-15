@@ -23,7 +23,7 @@ function savePerm(btn) {
     });
 };
 
-function addArchive(btn) {
+function addPerm(btn) {
     var row = $(btn).parent().parent();
     var inputField = $(row).find('.name-perm')[0];
     $.get('Admin/InsertPerm/' + btn.dataset.id + "?name=" + inputField.value);

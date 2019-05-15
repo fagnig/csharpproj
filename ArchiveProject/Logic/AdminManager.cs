@@ -115,9 +115,9 @@ namespace ArchiveProject.Logic
         public void CreatePermission(string hash, string permissionName)
         {
 
-            if ((Int32)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchivePermissions WHERE name = ['{permissionName}']") == 0)
+            if ((Int32)dbContext.ExecScalar($"SELECT COUNT(*) FROM ArchivePermissions WHERE name = '{permissionName}'") == 0)
             {
-                dbContext.ExecNonQuery($"INSERT INTO ArchivePermissions VALUES ( ['{hash}'], ['{permissionName}']);");
+                dbContext.ExecNonQuery($"INSERT INTO ArchivePermissions VALUES ( '{hash}', '{permissionName}');");
             }
 
         }
@@ -128,16 +128,16 @@ namespace ArchiveProject.Logic
 
             List<string> permSql = new List<string>
             {
-                $"DELETE FROM ArchivePermMapping WHERE id_perm = ['{permissionHash}'];",
-                $"DELETE FROM ArchiveUserPermMapping WHERE id_perm = ['{permissionHash}'];",
-                $"DELETE FROM ArchivePermissions WHERE id = ['{permissionHash}'];"
+                $"DELETE FROM ArchivePermMapping WHERE id_perm = '{permissionHash}';",
+                $"DELETE FROM ArchiveUserPermMapping WHERE id_perm = '{permissionHash}';",
+                $"DELETE FROM ArchivePermissions WHERE id = '{permissionHash}';"
             };
 
             dbContext.ExecTrans(permSql);
         }
         public void RenamePermission(string permissionHash, string newName)
         {
-            dbContext.ExecNonQuery($"UPDATE ArchivePermissions SET name = ['{newName}'] WHERE id = ['{permissionHash}'];");
+            dbContext.ExecNonQuery($"UPDATE ArchivePermissions SET name = '{newName}' WHERE id = '{permissionHash}';");
         }
 
         public List<List<Object>> GetPermissions()
@@ -178,17 +178,17 @@ namespace ArchiveProject.Logic
         }
         public void RemovePerm(string userHash, int perm)
         {      
-            dbContext.ExecNonQuery($"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm=['{perm}'], id_user = ['{userHash}']);");
+            dbContext.ExecNonQuery($"DELETE FROM [ArchiveUserPermMapping] WHERE id_perm='{perm}', id_user = '{userHash}');");
         }
 
         public void AssignTable(string tableHash, string perm)
         {
-            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchivePermMapping] VALUES (['{perm}'], ['{tableHash}']);");
+            dbContext.ExecNonQuery($"INSERT IGNORE INTO [ArchivePermMapping] VALUES ('{perm}', '{tableHash}');");
         }
 
         public void RemoveTable(string tableHash, string perm)
         {
-            dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_role=['{perm}'], id_table = ['{tableHash}']);");
+            dbContext.ExecNonQuery($"DELETE FROM [ArchivePermMapping] WHERE id_role='{perm}', id_table = '{tableHash}');");
         }
 
         public List<List<Object>> GetColumns(string tableHash)
