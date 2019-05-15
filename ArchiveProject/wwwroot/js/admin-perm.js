@@ -14,7 +14,7 @@ function savePerm(btn) {
     var id = $(btn)[0].dataset.id;
     var inputField = $(btn).parent().parent().find(".name-perm")[0];
     inputField.setAttribute("disabled", "true");
-    $.get('Admin/RenamePerm/' + inputField.dataset.id + '?name=' + inputField.value);
+    $.get('Admin/RenamePermission/' + inputField.dataset.id + '?name=' + inputField.value);
 
     $(btn)[0].value = "Edit";
     $(btn).unbind().bind('click', function (e) {
@@ -46,6 +46,38 @@ function addPerm(btn) {
         deletePerm(this);
     });
 };
+
+function buildPermAssignRow(id,name,assigned) {
+    var row = '<tr>';
+    row += '<td style="vertical-align:middle; width:80%;">';
+    row += '<div class="id-perm">' + name + '</div>';
+    row += '</td>';
+    row += '<td style="vertical-align:middle; width:20%;">';
+    if (assigned) { row += '<input type="checkbox" style="width:100%" class="btn btn-default assign-perm-row" data-id="' + id + '" checked>' }
+    else { row += '<input type="checkbox" style="width:100%" class="btn btn-default assign-perm-row" data-id="' + id + '">' }
+    row += '</td>';
+    row += '</tr>';
+    return row;
+}
+
+function buildArchiveModal(btn) {
+    var id = $(btn)[0].dataset.id;
+    var modalBody = $('.perm-modal-body');
+    $.get('Admin/GetColumns/' + id, {}, function (data) {
+        var json = JSON.parse(data);
+        $.each(json, function (index, value) {
+            modalBody.append(buildModalRow(id, 'delete'));
+            var rows = $(modalBody).find('tr');
+            var last = $(rows[rows.length - 1]);
+            last.find(".name-archive-column-row").val(value[0]);
+            last.find(".type-archive-column-row").append('<option value="' + value[1] + '" selected = "selected">' + map[value[1]] + '</option>');
+            last.find(".delete-archive-column-row").bind('click', function (e) {
+                e.preventDefault();
+                deleteColumn(this);
+            });
+        });
+    });
+}
 
 function appendPerm(data) {
     var row = '<tr>';
@@ -101,7 +133,7 @@ function appendPerm(data) {
 
 function deletePerm(btn) {
     if (confirm('Are you sure?')) {
-        $.get('Admin/DeletePerm/' + $(btn)[0].dataset.id)
+        $.get('Admin/DeletePermission/' + $(btn)[0].dataset.id)
             .done(function () {
                 $(btn).parents("tr").remove();
             });

@@ -91,5 +91,10 @@ namespace ArchiveProject.Controllers
         {
             return JsonConvert.SerializeObject(adm.GetColumns(id));
         }
+
+        public string GetPermissions(string id)
+        {
+            return JsonConvert.SerializeObject(adm.GetPermissions());
+        }
     }
 }

@@ -99,9 +99,7 @@ function deleteColumn(btn) {
 }
 
 function closeArchiveModal() {
-    $('.archive-modal-body').children('tr').each(function (e) {
-        $(e).remove();
-    });
+    $('.archive-modal-body').children('tr').each(function (e) {$(this).remove();});
 }
 
 function buildArchiveModal(btn) {
