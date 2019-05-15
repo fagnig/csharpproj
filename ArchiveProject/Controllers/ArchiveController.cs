@@ -9,6 +9,7 @@ using ArchiveProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace ArchiveProject.Controllers
 {
@@ -42,11 +43,7 @@ namespace ArchiveProject.Controllers
             // Populate available archives
             ViewData["Archives"] = am.GetUserTableList(key);
 
-            // Populate model
-            ArchiveViewModel avm = new ArchiveViewModel();
-            //if(!String.IsNullOrEmpty(id)) { avm = am.GetTable(id); }
-
-            return View(avm);
+            return View();
         }
 
         public void UpdateDbValue(string id, string column, string table, string value)
@@ -62,6 +59,16 @@ namespace ArchiveProject.Controllers
         public object CreateDbRow(string id)
         {
             return am.InsertRow(id);
+        }
+
+        public string GetArchive(string id)
+        {
+            return JsonConvert.SerializeObject(am.GetTable(id));
+        }
+
+        public string GetArchiveHeader(string id)
+        {
+            return JsonConvert.SerializeObject(am.GetTable(id));
         }
     }
 }

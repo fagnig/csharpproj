@@ -30,7 +30,7 @@ function saveRow(btn) {
             inputvalue = fields[i].value;
         }
 
-        $.get('../../UpdateDbValue/'
+        $.get('Archive/UpdateDbValue/'
             + fields[i].dataset.id + '?'
             + 'column=' + fields[i].dataset.column + '&'
             + 'table=' + fields[i].dataset.table + '&'
@@ -44,30 +44,27 @@ function saveRow(btn) {
     });
 };
 
-function addRow(btn) {
+function addRow() {
     $.get('../../CreateDbRow/' + btn.dataset.table, {}, function (data) {
-        // Set field name to new id
-        var row = $(btn).parents("tr");
-        var fields = $(row).find(".field-value");
-        var i;
-        for (i = 0; i < fields.length; i++) {
-            fields[i].setAttribute("name", data);
-            fields[i].dataset.id = data;
-        }
+        var tableHash = $('.add-row')[0].dataset.id;
+        var rowId = data;
+        $.get('Archive/GetArchiveHeader/' + id, {}, function (data) {
+            var json = JSON.parse(data);
+            $('.table-data-body').append(buildNewTableTR(tableHash, rowId, json));
 
-        // Set id
-        var editButton = $(row).find(".edit-row");
-        editButton.dataset.id = data;
-
-        // Set id & correct eventlistener
-        var deleteButton = $(row).find(".delete-row");
-        deleteButton.dataset.id = data;
-        deleteButton.value = "Delete";
-        $(buttons[1]).unbind().bind('click', function (e) {
-            e.preventDefault();
-            deleteRow(this);
+            $('.save-row').unbind().bind('click', function (e) {
+                e.preventDefault();
+                saveRow(this);
+            });
+            $('.edit-row').unbind().bind('click', function (e) {
+                e.preventDefault();
+                editRow(this);
+            });
+            $('.delete-row').unbind().bind('click', function (e) {
+                e.preventDefault();
+                deleteRow(this);
+            });
         });
-        save(editButton);
     });
 };
 
@@ -79,6 +76,19 @@ function deleteRow(btn) {
             });
     }
 };
+
+function buildNewTableTR(tableHash, rowId, rowData) {
+    var row = '<tr>';
+    row += '<td><input type="button" class="btn btn-default save-row" data-id="' + rowId + '" data-table="' + tableHash + '" value="Save" /></td>';
+    row += '<td><input type="button" class="btn btn-default delete-row" data-id="' + rowId + '" data-table="' + tableHash + '" value="Delete" /></td>';
+    var i;
+    for (i = 1; i < rowData.length; i++) {
+        var type = map[rowData[i][1]];
+        row += '<td><input class="input-sm field-value" type="' + type + '" name="' + rowId + '" data-id="' + rowId + '" data-column="' + rowData[i][0] + '" data-table="' + tableHash + '" /></td>';
+    }
+    row += '</tr>';
+    return row;
+}
 
 function buildTableTR(tableHash, rowData, newRow) {
     var row = '<tr>';
@@ -92,24 +102,38 @@ function buildTableTR(tableHash, rowData, newRow) {
         row += '<td><input type="button" class="btn btn-default edit-row" data-id="' + rowData[0][0] + '" data-table="' + tableHash + '" value="Edit" /></td>';
     }
     row += '<td><input type="button" class="btn btn-default delete-row" data-id="' + rowData[0][0] + '" data-table="' + tableHash + '" value="Delete" /></td>';
-
-    for (j = 1; j < tableData[i].length; j++) {
+    var i;
+    for (i = 1; i < rowData.length; i++) {
         var type = map[rowData[i][2]];
-        row += '<input class="input-sm field-value" type="' + type + '" value="' + rowData[i][0] + '" name="' + rowData[0][0] + '" data-id="' + rowData[0][0] + '" data-column="' + rowData[i][1] + '" data-table="' + tableHash + '" ' + disabled + ' />';
+        if (type == "text" || type == "number") {
+            row += '<td><input class="input-sm field-value" type="' + type + '" value="' + rowData[i][0] + '" name="' + rowData[0][0] + '" data-id="' + rowData[0][0] + '" data-column="' + rowData[i][1] + '" data-table="' + tableHash + '" ' + disabled + ' /></td>';
+        }
+        else if (type == "checkbox") {
+            var checked = '';
+            if (rowData[i][0]) { checked = 'checked'; }
+            row += '<td><input class="input-sm field-value" type="' + type + '" name="' + rowData[0][0] + '" data-id="' + rowData[0][0] + '" data-column="' + rowData[i][1] + '" data-table="' + tableHash + '" ' + disabled + ' ' + checked + ' /></td>';
+        }
+        else if (type == "date") {
+            var date = rowData[i][0].substring(0,10);
+            row += '<td><input class="input-sm field-value" type="' + type + '" value="' + date + '" name="' + rowData[0][0] + '" data-id="' + rowData[0][0] + '" data-column="' + rowData[i][1] + '" data-table="' + tableHash + '" ' + disabled + ' /></td>';
+        }
     }
     row += '</tr>';
     return row;
 }
 
-function buildTableHead(tableData) {
-    var head = "";
-    var i;
-    head += '<tr><th></th><th></th>';
-    for (i = 1; i < tableData[0].length; i++) {
-        head += '<th>' + tableData[0][i][1] + '</th>';
-    }
-    head += '</tr>';
-    return head;  
+function buildTableHead(tableHash) {
+    $.get('Archive/GetArchiveHeader/' + tableHash, {}, function (data) {
+        var json = JSON.parse(data);
+        var head = "";
+        var i;
+        head += '<tr><th></th><th></th>';
+        for (i = 1; i < json.length; i++) {
+            head += '<th>' + json[i][0] + '</th>';
+        }
+        head += '</tr>';
+        $('.table-data-head').append(head);
+    });
 }
 
 function buildTableBody(tableHash, tableData) {
@@ -123,12 +147,10 @@ function buildTableBody(tableHash, tableData) {
 
 function buildTable(id) {
     $('.add-row')[0].dataset.id = id;
-    var head = $('.table-data-head');
-    var body = $('.table-data-body');
-    $.get('Admin/GetColumns/' + id, {}, function (data) {
+    $.get('Archive/GetArchive/' + id, {}, function (data) {
         var json = JSON.parse(data);
-        head.append(buildTableHead(json));
-        body.append(buildTableBody(id, json));
+        buildTableHead(id);
+        $('.table-data-body').append(buildTableBody(id, json));
         $('.save-row').unbind().bind('click', function (e) {
             e.preventDefault();
             saveRow(this);
@@ -155,6 +177,11 @@ $(document).ready(function () {
         var selectedArchive = $(this).children("option:selected").val();
         cleanTable();
         buildTable(selectedArchive);
+    });
+
+    $('.add-row').unbind().bind('click', function (e) {
+        e.preventDefault();
+        addRow(this);
     });
 });
 
