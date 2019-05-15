@@ -44,7 +44,7 @@ namespace ArchiveProject.Controllers
 
             // Populate model
             ArchiveViewModel avm = new ArchiveViewModel();
-            if(!String.IsNullOrEmpty(id)) { avm = am.GetTable(id); }
+            //if(!String.IsNullOrEmpty(id)) { avm = am.GetTable(id); }
 
             return View(avm);
         }

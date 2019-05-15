@@ -48,41 +48,43 @@ namespace ArchiveProject.Logic
             dbContext.ExecNonQuery($"UPDATE [tb_{table}] SET [{column}] = '{value}' WHERE id = '{id}'");
         }
 
-        public ArchiveViewModel GetTable(string archiveId)
+        public List<List<List<Object>>> GetTable(string archiveId)
         {
-            ArchiveViewModel archive = new ArchiveViewModel();
+            List<List<List<Object>>> archive = new List<List<List<Object>>>();
 
             DbDataReader dr;
             try { dr = dbContext.ExecReader($"SELECT * FROM [tb_{archiveId}] ORDER BY id"); }
-            catch (SqlException) { return new ArchiveViewModel(); }
+            catch (SqlException) { return new List<List<List<Object>>>(); }
             bool first = true;
+
 
             while (dr.Read())
             {
-                List<Object> tmpList = new List<object>();
+                List<List<Object>> tmpList = new List<List<Object>>();
 
                 for (int i = 0; i < dr.FieldCount; i++)
                 {
-                    if (first)
-                    {
-                        archive.typelist.Add(new KeyValuePair<string, Type>(dr.GetName(i), dr.GetFieldType(i)));
+                    List<Object> tmpSubList = new List<Object>();
 
-                    }
+                    tmpSubList.Add(dr.GetValue(i));
 
-                    tmpList.Add(dr.GetValue(i));
+                    tmpSubList.Add(dr.GetName(i));
+                    tmpSubList.Add(dr.GetFieldType(i).Name);
+
+                    tmpList.Add(tmpSubList);
                 }
 
-                first = false;
-
-                archive.values.Add(tmpList);
+                archive.Add(tmpList);
             }
 
             dr.Close();
 
-            archive.tableHash = archiveId;
-            archive.tableTitle = (string) dbContext.ExecScalar($"SELECT [name] FROM [ArchiveMapping] WHERE [id] = '{archiveId}';");
-
             return archive;
+        }
+
+        public string GetArchiveTitle(string archiveHash)
+        {
+            return (string)dbContext.ExecScalar($"SELECT [name] FROM [ArchiveMapping] WHERE [id] = '{archiveHash}';");
         }
 
 
