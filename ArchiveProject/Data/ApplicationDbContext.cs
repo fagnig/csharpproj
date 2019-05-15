@@ -37,10 +37,9 @@ namespace ArchiveProject.Data
         private void runPreReq()
         {
             PreRequisiteManager prm = new PreRequisiteManager(this);
-            prm.DeployRequiredTables();
+            //prm.DeployRequiredTables();
             //prm.AddAdminAccount();
-
-            prm.DeployDefaultData();
+            //prm.DeployDefaultData();
         }
 
         public void DropTable(string tableToDrop)
