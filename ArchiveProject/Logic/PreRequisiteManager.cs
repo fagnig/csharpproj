@@ -70,12 +70,12 @@ namespace ArchiveProject.Logic
             try {
                 dbContext.ExecNonQuery("CREATE TABLE ArchiveMapping( id nvarchar(256), name nvarchar(256));");
             }
-            catch (SqlException) {/*Table exists*/}
+            catch (SqlException) { dbContext.TryCloseConnection(); }
 
             try {
                 dbContext.ExecNonQuery("CREATE TABLE ArchivePermissions( id nvarchar(256) NOT NULL, name nvarchar(256));");
             }
-            catch (SqlException) {/*Table exists*/}
+            catch (SqlException) { dbContext.TryCloseConnection(); }
 
             try
             {
@@ -85,17 +85,17 @@ namespace ArchiveProject.Logic
                     dbContext.ExecNonQuery("INSERT INTO ArchivePermissions VALUES ('0', 'Admin');");
                 }
             }
-            catch (SqlException) {/*Admin role exists*/}
+            catch (SqlException) { dbContext.TryCloseConnection(); }
 
             try { 
                 dbContext.ExecNonQuery("CREATE TABLE ArchivePermMapping( id_perm nvarchar(256), id_table nvarchar(256));");
             }
-            catch (SqlException) {/*Table exists*/}
+            catch (SqlException) { dbContext.TryCloseConnection(); }
 
             try {
                 dbContext.ExecNonQuery("CREATE TABLE ArchiveUserPermMapping( id_user nvarchar(450), id_perm int);");
             }
-            catch (SqlException) {/*Table exists*/}
+            catch (SqlException) { dbContext.TryCloseConnection(); }
 
             return 0;
         }
