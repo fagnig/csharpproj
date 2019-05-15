@@ -110,5 +110,12 @@ namespace ArchiveProject.Data
             }
             sqlCon.Close();
         }
+
+        public void TryCloseConnection()
+        {
+            if(sqlCon.State == ConnectionState.Open){ sqlCon.Close(); }
+        }
+
+        
     }
 }
