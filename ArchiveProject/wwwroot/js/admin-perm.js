@@ -23,50 +23,80 @@ function savePerm(btn) {
     });
 };
 
-function copyPerm(btn,data) {
-    // Find correct row
-    var add = $(btn).parent().parent();
-    var rows = add.siblings();
-    var last = $(rows[rows.length - 1]);
-    var tobe = $(last).clone();
+function addArchive(btn) {
+    var row = $(btn).parent().parent();
+    var inputField = $(row).find('.name-perm')[0];
+    $.get('Admin/InsertPerm/' + btn.dataset.id + "?name=" + inputField.value);
+    inputField.setAttribute("disabled", "true");
 
-    // Set Id
-    var id_field = $(tobe).find('.id-perm');
-    id_field[0].innerText = data;
+    //Get all buttons
+    var buttons = $(row).find(".btn");
+
+    buttons[0].value = "Edit";
+    $(buttons[0]).unbind().bind('click', function (e) {
+        e.preventDefault();
+        editPerm(this);
+    });
+
+    buttons[1].removeAttribute("disabled");
+
+    buttons[2].value = "Delete";
+    $(buttons[2]).unbind().bind('click', function (e) {
+        e.preventDefault();
+        deletePerm(this);
+    });
+};
+
+function appendPerm(data) {
+    var row = '<tr>';
+    row += '<td style="vertical-align:middle; width:25%;">';
+    row += '<div class="id-perm">' + data + '</div>';
+    row += '</td>';
+    row += '<td style="vertical-align:middle; width:60%;">';
+    row += '<input style="width:100%" class="input-sm name-perm" type="text" value="" name="' + data + '" data-id="' + data + '" data-column="name" data-table="ArchivePermissions" disabled />';
+    row += '</td>';
+    row += '<td style="vertical-align:middle; width:5%;">';
+    row += '<input type="button" class="btn btn-default edit-perm" data-id="' + data + '" value="Edit" />';
+    row += '</td>';
+    row += '<td style="vertical-align:middle; width:5%;">';
+    row += '<input type="button" class="btn btn-default assign-perm" data-toggle="modal" data-target="#permModal" data-backdrop="static" data-keyboard="false" data-id="' + data + '" value="Assign" />';
+    row += '</td>';
+    row += '<td style="vertical-align:middle; width:5%;">';
+    row += '<input type="button" class="btn btn-default delete-perm" data-id="' + data + '" value="Delete" />';
+    row += '</td>';
+    row += '</tr>';
+
+    var body = $('.body-perm');
+    $(body).append(row);
+    var rows = $(body).find('tr');
+    var last = $(rows[rows.length - 1]);
 
     // Fix input Field
-    var fields = $(tobe).find('input');
+    var fields = $(last).find('input');
     fields[0].value = "";
     fields[0].removeAttribute("disabled");
-    fields[0].setAttribute("name", data);
-    fields[0].dataset.id = data;
 
     // Save button
     fields[1].value = "Add";
-    fields[1].dataset.id = data;
     $(fields[1]).unbind().bind('click', function (e) {
         e.preventDefault();
-        addArchive(this);
+        addPerm(this);
     });
 
     // Columns button
-    fields[2].value = "Columns";
-    fields[2].dataset.id = data;
+    fields[2].value = "Assign";
     fields[2].setAttribute('disabled', 'true');
     $(fields[2]).unbind().bind('click', function (e) {
         e.preventDefault();
-        //?
+        buildPermModal(this);
     });
 
     // Cancel button
     fields[3].value = "Cancel";
-    fields[3].dataset.id = data;
     $(fields[3]).unbind().bind('click', function (e) {
         e.preventDefault();
         cancel(this);
     });
-
-    $(last).after(tobe);
 }
 
 function deletePerm(btn) {
@@ -97,7 +127,6 @@ $(document).ready(function () {
 
     $(".add-perm").unbind().bind('click', function (e) {
         e.preventDefault();
-        var btn = $(this);
-        $.get('Admin/GetHash', {}, function (data) { copyPerm(btn,data); });
+        $.get('Admin/GetHash', {}, function (data) { appendPerm(data); });
     });
 });

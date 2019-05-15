@@ -51,6 +51,11 @@ namespace ArchiveProject.Controllers
             adm.CreateArchive(id, name);
         }
 
+        public void InsertPerm(string id, string name)
+        {
+            adm.CreatePermission(id, name);
+        }
+
         public void AddColToArchive(string id, string colName, string colType)
         {
             adm.AddCol(id, colName, colType);

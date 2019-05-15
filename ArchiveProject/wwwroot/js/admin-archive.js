@@ -60,18 +60,47 @@ function addArchiveModalRow(btn) {
     modalBody.append(buildModalRow(id, 'add'));
     var rows = $(modalBody).find('tr');
     var last = $(rows[rows.length - 1]);
-    last.find("add-archive-column-row").bind('click', function (e) {
+    last.find(".add-archive-column-row").bind('click', function (e) {
         e.preventDefault();
         addColumn(this);
     });
 }
 
 function addColumn(btn) {
+    var addBtn = $(btn)[0];
+    var id = addBtn.dataset.id;
     var row = $(btn).parent().parent();
-    var namefield = row.find("name-archive-column-row")[0];
-    var typefield = row.find("type-archive-column-row")[0];
-    $.get('Admin/GetColumns/' + id).done(function () {
+    var namefield = row.find(".name-archive-column-row");
+    var name = namefield.val();
+    var typefield = row.find(".type-archive-column-row");
+    var type = typefield.children("option:selected").val();
+    $.get('Admin/AddColToArchive/' + id + '?colName=' + name + '&colType=' + type).done(function () {
+        addBtn.value = 'Delete';
+        $(addBtn).unbind().bind('click', function (e) {
+            e.preventDefault();
+            deleteColumn(btn);
+        });
+        namefield[0].setAttribute("disabled", "true");
+        typefield[0].setAttribute("disabled", "true");
+    });
+}
 
+function deleteColumn(btn) {
+    if (confirm('Are you sure?')) {
+        var delBtn = $(btn);
+        var id = delBtn[0].dataset.id;
+        var row = delBtn.parent().parent();
+        var name = row.find(".name-archive-column-row")[0].value;
+        $.get('Admin/RemoveColFromArchive/' + id + '?colName=' + name)
+            .done(function () {
+                row.remove();
+            });
+    }
+}
+
+function closeArchiveModal() {
+    $('.archive-modal-body').children('tr').each(function (e) {
+        $(e).remove();
     });
 }
 
@@ -81,13 +110,16 @@ function buildArchiveModal(btn) {
     var modalBody = $('.archive-modal-body');
     $.get('Admin/GetColumns/' + id, {}, function (data) {
         var json = JSON.parse(data);
-        alert(data);
         $.each(json, function (index, value) {
             modalBody.append(buildModalRow(id, 'delete'));
             var rows = $(modalBody).find('tr');
             var last = $(rows[rows.length - 1]);
-            last.find(".name-archive-column-row")[0].value = value[0];
-            $(last.find(".type-archive-column-row")[0]).append('<option value="'+value[1]+'" selected = "selected">' + map[value[1]] + '</option>');
+            last.find(".name-archive-column-row").val(value[0]);
+            last.find(".type-archive-column-row").append('<option value="' + value[1] + '" selected = "selected">' + map[value[1]] + '</option>');
+            last.find(".delete-archive-column-row").bind('click', function (e) {
+                e.preventDefault();
+                deleteColumn(this);
+            });
         });
     });
 }
@@ -132,7 +164,7 @@ function appendArchive(btn, data) {
     row += '<input type="button" class="btn btn-default edit-archive" data-id="' + data + '" value="Edit" />';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:5%;">';
-    row += '<input type="button" class="btn btn-default columns-archive" data-id="' + data + '" value="Columns" />';
+    row += '<input type="button" class="btn btn-default columns-archive" data-toggle="modal" data-target="#archiveModal" data-backdrop="static" data-keyboard="false" data-id="' + data + '" value="Columns" />';
     row += '</td>';
     row += '<td style="vertical-align:middle; width:5%;">';
     row += '<input type="button" class="btn btn-default delete-archive" data-id="' + data + '" value="Delete" />';
@@ -202,6 +234,7 @@ $(document).ready(function () {
     $(".columns-archive").unbind().bind('click', function (e) {
         e.preventDefault();
         buildArchiveModal(this);
+
     });
 
     $(".add-archive").unbind().bind('click', function (e) {
@@ -213,5 +246,10 @@ $(document).ready(function () {
     $(".add-archive-column-modal").unbind().bind('click', function (e) {
         e.preventDefault();
         addArchiveModalRow(this);
+    });
+
+    $(".close-archive-modal").unbind().bind('click', function (e) {
+        e.preventDefault();
+        closeArchiveModal();
     });
 });

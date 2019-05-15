@@ -159,7 +159,7 @@ namespace ArchiveProject.Logic
         {
             if (!dbContext.typeMap.ContainsKey(colType)) { return; }
 
-            dbContext.ExecNonQuery($"ALTER TABLE [tb_{tableHash}] ADD COLUMN [{colName}] [{dbContext.typeMap[colType]}]");
+            dbContext.ExecNonQuery($"ALTER TABLE [tb_{tableHash}] ADD [{colName}] {dbContext.typeMap[colType]}");
         }
 
         public void RemoveCol(string colName, string tableHash)
