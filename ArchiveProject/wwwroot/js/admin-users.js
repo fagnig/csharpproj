@@ -17,6 +17,7 @@ function buildUserModal(btn) {
     $.get('Admin/GetUserMapping/' + id, {}, function (data) {
         var json = JSON.parse(data);
         $.each(json, function (index, value) {
+            alert(JSON.stringify(value));
             modalBody.append(buildUserAssignRow(id, value[0], value[1], value[2]));
             var rows = $(modalBody).find('tr');
             var last = $(rows[rows.length - 1]);
@@ -33,7 +34,7 @@ function registerUserAssign(btn) {
     var idUser = checkbox[0].dataset.idUser;
     var idPerm = checkbox[0].dataset.idPerm;
     var assign = checkbox.is(":checked");
-    $.get('Admin/SetPermissionMapping/' + idUser + '?idPerm=' + idPerm + '&assign=' + assign);
+    $.get('Admin/SetUserMapping/' + idUser + '?idPerm=' + idPerm + '&assign=' + assign);
 }
 
 function closeUserModal() {
@@ -46,7 +47,7 @@ $(document).ready(function () {
         buildUserModal(this);
     });
 
-    $(".close-perm-modal").unbind().bind('click', function (e) {
+    $(".close-user-modal").unbind().bind('click', function (e) {
         e.preventDefault();
         closeUserModal();
     });
