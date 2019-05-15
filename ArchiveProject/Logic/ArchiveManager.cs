@@ -55,7 +55,6 @@ namespace ArchiveProject.Logic
             DbDataReader dr;
             try { dr = dbContext.ExecReader($"SELECT * FROM [tb_{archiveId}] ORDER BY id"); }
             catch (SqlException) { return new List<List<List<Object>>>(); }
-            bool first = true;
 
 
             while (dr.Read())
@@ -80,6 +79,25 @@ namespace ArchiveProject.Logic
             dr.Close();
 
             return archive;
+        }
+
+        public List<List<Object>> GetTableHeader(string archiveHash)
+        {
+            DbDataReader dr = dbContext.ExecReader($"SELECT * FROM [tb_{archiveHash}] WHERE 1=2;");
+            dr.Read();
+
+            List<List<Object>> tmpList = new List<List<Object>>();
+ 
+            for (int i = 0; i < dr.FieldCount; i++)
+            {
+                List<Object> tmpSubList = new List<Object>();
+                tmpSubList.Add(dr.GetName(i));
+                tmpSubList.Add(dr.GetFieldType(i).Name);
+                tmpList.Add(tmpSubList);
+            }
+            dr.Close();
+
+            return tmpList;
         }
 
         public string GetArchiveTitle(string archiveHash)
