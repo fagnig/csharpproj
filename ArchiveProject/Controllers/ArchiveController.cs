@@ -46,6 +46,12 @@ namespace ArchiveProject.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
         public void UpdateDbValue(string id, string column, string table, string value)
         {
             if (pm.CanUserAccess(key, table))

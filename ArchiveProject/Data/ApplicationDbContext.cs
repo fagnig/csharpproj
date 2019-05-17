@@ -16,7 +16,6 @@ namespace ArchiveProject.Data
     {
         public DbConnection sqlCon;
         public Dictionary<string, string> typeMap;
-        private string adminKey;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -27,49 +27,47 @@ namespace ArchiveProject
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
+            // DbContext for Archive db calls
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("azureDb")));
+
+            // Identity framework for login
             services.AddDefaultIdentity<IdentityUser>()
+                .AddDefaultUI()
+                // Use Db to store user information
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            // Use ModelViewControl
             services.AddMvc(config =>
             {
+                // Setup policy to allways demand authorized users on all pages
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-  
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
+                // Detailed dev error page
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
+                // Simple custom error page
                 app.UseExceptionHandler("/Archive/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
+            // Adds Authentication
             app.UseAuthentication();
 
             app.UseMvc(routes =>
